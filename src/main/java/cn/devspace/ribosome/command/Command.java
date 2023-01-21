@@ -15,9 +15,8 @@ package cn.devspace.ribosome.command;
 
 import cn.devspace.nucleus.Manager.Annotation.Commands;
 import cn.devspace.nucleus.Manager.Command.CommandBase;
-import cn.devspace.nucleus.Message.Log;
 import cn.devspace.nucleus.Plugin.PluginBase;
-import cn.devspace.ribosome.Main;
+import cn.devspace.ribosome.manager.languageManager;
 
 
 public class Command extends PluginBase implements CommandBase {
@@ -38,8 +37,8 @@ public class Command extends PluginBase implements CommandBase {
 
     private void help(){
         sendLog("=-=-=-=-=-=Ribosome=-=-=-=-=-=");
-        sendLog("->"+translateMessage("Command.help.help"));
-        sendLog("->"+translateMessage("Command.help.test"));
+        sendLog("->"+ languageManager.translateMessage("Command.help.help"));
+        sendLog("->"+languageManager.translateMessage("Command.help.test"));
         sendLog("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
     }
 

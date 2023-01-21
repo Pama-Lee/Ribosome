@@ -11,17 +11,27 @@
  * Author: Li JiaKe(Pama)
  */
 
-package cn.devspace.ribosome.entity;
+package cn.devspace.ribosome.auth;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
+public class authUnit {
 
-@Data
-@TableName("ribo_user")
-public class User {
-    @TableId
-    private Long uid;
-    private String username;
-    private String email;
+    private final String Unit_Version = "0.0.2";
+
+    /**
+     * 验证回调签名
+     * Version: 0.0.2
+     * @param sign 回调sign
+     * @param time 回调附带时间戳
+     * @return 返回布尔值
+     */
+    public static boolean verifyCallbackSignature(String sign,String time){
+            // TODO: 签名算法
+        return true;
+    }
+
+
+
+    public String getUnit_Version() {
+        return Unit_Version;
+    }
 }

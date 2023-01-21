@@ -16,12 +16,11 @@ import cn.devspace.nucleus.Manager.Command.CommandManager;
 import cn.devspace.nucleus.Manager.DataBase.DataBase;
 import cn.devspace.nucleus.Plugin.PluginBase;
 import cn.devspace.ribosome.command.Command;
-import cn.devspace.ribosome.entity.User;
+import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.manager.database.DataBaseManager;
+import cn.devspace.ribosome.manager.languageManager;
 import cn.devspace.ribosome.mapping.auth;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-import javax.annotation.Resource;
 
 /**
  *  启动类
@@ -31,11 +30,11 @@ public class Main extends PluginBase {
     public final String version = "v0.0.1";
     public final String PluginName = "Ribosome";
 
-    private DataBaseManager dataBaseManager = new DataBaseManager();
+    private final DataBaseManager dataBaseManager = new DataBaseManager();
+    private final errorManager errorManager = new errorManager();
 
-    @Resource
-    private BaseMapper<User> userBaseMapper;
-
+    // 单例模式下的多语言管理
+    private static final languageManager languageManager = cn.devspace.ribosome.manager.languageManager.newInstance();
 
     /**
      * 当该项目加载时事件
@@ -44,6 +43,9 @@ public class Main extends PluginBase {
     @Override
     public void onLoad() {
         sendLog(translateMessage("Loading"));
+        // 注册单例语言管理
+        languageManager.setLangBase(getPluginLang());
+        // 注册命令
         CommandManager.registerCommand(new Command());
         // 注册路由
         initRoute(auth.class);
@@ -51,12 +53,12 @@ public class Main extends PluginBase {
 
     @Override
     public void onEnable() {
-        super.onEnable();
+        sendLog(translateMessage("Enable"));
     }
 
     @Override
     public void onEnabled() {
-        super.onEnabled();
+
     }
 
     public String getPluginName(){

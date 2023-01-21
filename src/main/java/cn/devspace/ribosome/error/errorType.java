@@ -11,17 +11,10 @@
  * Author: Li JiaKe(Pama)
  */
 
-package cn.devspace.ribosome.entity;
+package cn.devspace.ribosome.error;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-
-@Data
-@TableName("ribo_user")
-public class User {
-    @TableId
-    private Long uid;
-    private String username;
-    private String email;
+public class errorType {
+    public static final int Illegal_Parameter = 1001;
+    public static final int Callback_Signature_Error = 1002;
+    public static final int Unknown_Error = -1;
 }
