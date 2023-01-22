@@ -25,5 +25,10 @@
         <version>RELEASE</version>
         <scope>compile</scope>
     </dependency>
+    <dependency>
+        <groupId>com.mobaijun</groupId>
+        <artifactId>mybatis-plus-spring-boot-starter</artifactId>
+        <version>1.1.4</version>
+    </dependency>
 </dependencies>
 </project>

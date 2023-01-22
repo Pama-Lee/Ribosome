@@ -13,6 +13,9 @@
 
 package cn.devspace.ribosome.auth;
 
+/**
+ * Authorization相关的通用工具类
+ */
 public class authUnit {
 
     private final String Unit_Version = "0.0.2";

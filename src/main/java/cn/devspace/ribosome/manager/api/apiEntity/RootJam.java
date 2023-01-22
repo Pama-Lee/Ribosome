@@ -15,9 +15,9 @@ package cn.devspace.ribosome.manager.api.apiEntity;
 
 public class RootJam {
 
-    public static final String BASE_URL = "https://rootjam.pamalee.cn/";
+    public static final String BASE_URL = "https://api.pamalee.cn/";
 
-    public static final String get_UserData_By_Token = BASE_URL+"";
+    public static final String get_UserData_By_Token = BASE_URL+"User/userData";
 
 
 }
