@@ -34,6 +34,8 @@ public class errorManager extends ManagerBase {
                     ResponseString(code, -1, languageManager.translateMessage("Error.Illegal.parameter"));
             case errorType.Callback_Signature_Error ->
                     ResponseString(code, -1, languageManager.translateMessage("Error.Callback.Signature.Error"));
+            case errorType.Callback_Data_Error ->
+                    ResponseString(code,-1,languageManager.translateMessage("Error.Callback.Data.Error"));
             case errorType.Unknown_Error -> UnknownError(code);
             default -> UnknownError(code);
         };

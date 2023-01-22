@@ -7,15 +7,13 @@
  * |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  * | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
- * CreateTime: 2023/1/21
+ * CreateTime: 2023/1/22
  * Author: Li JiaKe(Pama)
  */
 
-package cn.devspace.ribosome.error;
+package cn.devspace.ribosome.manager.api;
 
-public class errorType {
-    public static final int Illegal_Parameter = 1001;
-    public static final int Callback_Signature_Error = 1002;
-    public static final int Callback_Data_Error = 1003;
-    public static final int Unknown_Error = -1;
+public class ApiList {
+
+
 }

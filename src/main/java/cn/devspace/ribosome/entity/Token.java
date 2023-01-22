@@ -35,6 +35,11 @@ public class Token {
     private String token;
 
     /**
+     * 用户ID
+     */
+    private Long uid;
+
+    /**
      * 签名
      */
     private String sign;
