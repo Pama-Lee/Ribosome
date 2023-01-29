@@ -13,8 +13,8 @@
 
 package cn.devspace.ribosome.manager.database;
 
-import cn.devspace.nucleus.App.Login.Entity.User;
 import cn.devspace.nucleus.Manager.DataBase.DataBase;
+import cn.devspace.ribosome.entity.User;
 
 import java.util.Properties;
 

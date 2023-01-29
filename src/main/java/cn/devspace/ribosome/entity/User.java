@@ -13,13 +13,14 @@
 
 package cn.devspace.ribosome.entity;
 
+import cn.devspace.nucleus.Plugin.DataEntity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
 @TableName("ribo_user")
-public class User {
+public class User extends DataEntity {
     @TableId
     private Long uid;
     private String username;

@@ -20,6 +20,7 @@ import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.manager.database.DataBaseManager;
 import cn.devspace.ribosome.manager.languageManager;
 import cn.devspace.ribosome.mapping.auth;
+import cn.devspace.ribosome.mapping.routes;
 
 
 /**
@@ -49,10 +50,11 @@ public class Main extends PluginBase {
         CommandManager.registerCommand(new Command());
         // 注册路由
         initRoute(auth.class);
+        initRoute(routes.class);
     }
 
     @Override
-    public void onEnable() {
+     public void onEnable() {
         sendLog(translateMessage("Enable"));
     }
 
