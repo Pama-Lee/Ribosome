@@ -13,18 +13,18 @@
 
 package cn.devspace.ribosome.entity;
 
+import cn.devspace.nucleus.Plugin.DataEntity;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class Route {
+public class Club extends DataEntity {
 
-    private String name;
-    private boolean layout = true;
-    private String path;
-    private String component;
-    private String icon;
-    private List<Route> routes;
+    private String cid;
+    private String club_name;
+    private String club_description;
+    private String club_logo;
+    private String club_type;
+    private String club_president;
+    private String announcement;
 
 }

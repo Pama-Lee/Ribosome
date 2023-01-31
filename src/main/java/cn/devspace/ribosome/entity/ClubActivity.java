@@ -7,24 +7,29 @@
  *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
- *   CreateTime: 2023/1/30
+ *   CreateTime: 2023/1/31
  *   Author: Li JiaKe(Pama)
  */
 
 package cn.devspace.ribosome.entity;
 
+import cn.devspace.nucleus.Plugin.DataEntity;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class Route {
+public class ClubActivity extends DataEntity {
 
-    private String name;
-    private boolean layout = true;
-    private String path;
-    private String component;
-    private String icon;
-    private List<Route> routes;
-
+        private String aid;
+        private String cid;
+        private String activity_name;
+        private String activity_description;
+        private String activity_logo;
+        private String activity_type;
+        private String activity_president;
+        private String activity_time;
+        private String activity_place;
+        private String activity_status;
+        private String activity_member;
+        private String activity_member_number;
+        private String activity_member_limit;
 }

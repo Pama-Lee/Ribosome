@@ -28,33 +28,17 @@ public class routes extends RouteManager {
     public Object routes(Map<String, String> args){
         Map<String,Object> map = new HashMap<>();
         List<Route> data = new ArrayList<>();
+        data.add(home());
+        data.add(user());
+        data.add(club());
+        map.put("data",data);
+        return map;
+    }
 
-        // 添加基本路由
-        Route home = new Route();
-        home.setName("welcome");
-        home.setPath("/welcome");
-        home.setIcon("smile");
-        home.setComponent("./Welcome");
-
-        Route user = new Route();
-        user.setPath("/user");
-        Route login = new Route();
-        login.setName("login");
-        login.setPath("/user/login");
-        login.setComponent("./user/Login");
-        Route notFound = new Route();
-        notFound.setComponent("./404");
-        List<Route> userChildren = new ArrayList<>();
-        userChildren.add(login);
-        userChildren.add(notFound);
-        user.setRoutes(userChildren);
-
-
-        // 添加社团路由
+    public Route club(){
         Route club = new Route();
         club.setName("club");
         club.setPath("/club");
-        club.setIcon("team");
         List<Route> clubChildren = new ArrayList<>();
         Route clubList = new Route();
         Route clubIndex = new Route();
@@ -70,24 +54,41 @@ public class routes extends RouteManager {
         List<Route> clubIndexChildren = new ArrayList<>();
         Route clubIndexHome = new Route();
         clubIndexHome.setPath("/club/:id");
-        for (int i=0;i<10;i++){
+        for (int i=1;i<4;i++){
             Route route = new Route();
             route.setName("社团"+i);
             route.setPath("/club/"+i);
-            route.setComponent("./club");
-            route.setIcon("team");
             clubIndexChildren.add(route);
         }
+        clubIndexChildren.add(clubIndexHome);
         clubIndex.setRoutes(clubIndexChildren);
         club.setRoutes(clubChildren);
-
-        data.add(home);
-        data.add(club);
-        data.add(user);
-        map.put("data",data);
-       // 返回route.ts格式信
-
-        return map;
+        return club;
     }
+
+
+    public Route home(){
+        Route home = new Route();
+        home.setName("welcome");
+        home.setPath("/welcome");
+        home.setComponent("./Welcome");
+        return home;
+    }
+
+    public Route user(){
+        Route user = new Route();
+        user.setPath("/user");
+        user.setLayout(false);
+        Route login = new Route();
+        login.setName("login");
+        login.setPath("/user/login");
+        login.setComponent("./user/Login");
+        List<Route> userChildren = new ArrayList<>();
+        userChildren.add(login);
+        user.setRoutes(userChildren);
+        return user;
+    }
+
+
 
 }
