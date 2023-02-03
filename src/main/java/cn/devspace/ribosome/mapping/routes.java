@@ -31,6 +31,8 @@ public class routes extends RouteManager {
         data.add(home());
         data.add(user());
         data.add(club());
+        data.add(my());
+        data.add(settings());
         map.put("data",data);
         return map;
     }
@@ -53,11 +55,11 @@ public class routes extends RouteManager {
 
         List<Route> clubIndexChildren = new ArrayList<>();
         Route clubIndexHome = new Route();
-        clubIndexHome.setPath("/club/:id");
+        clubIndexHome.setPath("/club/detail/:id");
         for (int i=1;i<4;i++){
             Route route = new Route();
             route.setName("社团"+i);
-            route.setPath("/club/"+i);
+            route.setPath("/club/detail/"+i);
             clubIndexChildren.add(route);
         }
         clubIndexChildren.add(clubIndexHome);
@@ -66,6 +68,22 @@ public class routes extends RouteManager {
         return club;
     }
 
+
+    public Route my(){
+        Route home = new Route();
+        home.setName("个人中心");
+        home.setPath("/accountcenter");
+        home.setComponent("./AccountCenter");
+        return home;
+    }
+
+    public Route settings(){
+        Route home = new Route();
+        home.setName("个人设置");
+        home.setPath("/accountsettings");
+        home.setComponent("./AccountSettings");
+        return home;
+    }
 
     public Route home(){
         Route home = new Route();

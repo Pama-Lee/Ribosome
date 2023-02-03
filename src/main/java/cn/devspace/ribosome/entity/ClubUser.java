@@ -34,7 +34,7 @@ public class ClubUser extends DataEntity {
         private boolean isExist = true;
 
         public String getUsername() {
-            String username = MapperManager.manager.userBaseMapper.selectById(uid).getUsername();
+            String username = MapperManager.manager.userBaseMapper.selectById(uid).getName();
             if (username != null)
                 return username;
             else{

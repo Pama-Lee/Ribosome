@@ -15,15 +15,26 @@ package cn.devspace.ribosome.mapping;
 
 import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
+import cn.devspace.nucleus.Message.Log;
 import cn.devspace.nucleus.Units.ApiUnit;
 import cn.devspace.ribosome.auth.authUnit;
 import cn.devspace.ribosome.entity.Token;
+import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.error.errorType;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.languageManager;
+import cn.devspace.ribosome.manager.user.userUnit;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 管理账号验证模块的路由
@@ -38,29 +49,35 @@ public class auth extends RouteManager{
      * @param args 传入的数据｜The incoming data
      * @return 返回响应给RootJam的数据|Returns a response to RootJam data
      */
-    @Router("auth/callback")
+    @Router("auth/loginToken")
     public Object callBack(Map<String ,String > args) {
         // TODO: 需要匹配的参数
-        String[] params = {"sign", "token", "uid", "time", "version"};
+        String[] params = {"token", "time", "version"};
         if (!checkParams(args, params)) {
             return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
         }
-        if (!authUnit.verifyCallbackSignature(args.get("sign"), args.get("time"))) {
-            return errorManager.newInstance().catchErrors(errorType.Callback_Signature_Error);
-        }
         try {
-            // 实例化新的token实体
-            Token token = new Token();
-            token.setSign(args.get("sign"));
-            token.setTime(System.currentTimeMillis());
-            token.setToken(args.get("token"));
-            token.setUid(Long.valueOf(args.get("uid")));
-
-            MapperManager.manager.tokenBaseMapper.insert(token);
+            Map<String ,Object> backMap = userUnit.requestToken(args.get("token"));
+            if (backMap == null || !Objects.equals(String.valueOf(backMap.get("msg")), "success")){
+                Log.sendLog(backMap.get("msg").toString());
+                return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+            }
+            User user = userUnit.getUserByopenID(String.valueOf(backMap.get("openid")));
+            if (user == null) {
+                return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+            }
             return ResponseString(200,1, languageManager.translateMessage("Auth.Login.Success"));
         } catch (Exception e) {
+            Log.sendWarn(e.getMessage());
             return errorManager.newInstance().catchErrors(errorType.Callback_Data_Error);
         }
     }
+
+
+
+
+
+
+
 
 }
