@@ -70,6 +70,26 @@ public class club extends RouteManager {
         return testActivity(args.get("cid"));
     }
 
+    @Router("getClubList")
+    public Object getClubList(Map<String, String> args){
+        return testList();
+    }
+
+
+    private Object testList(){
+        List<Club> clubs = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Club club = new Club();
+            club.setCid("1");
+            club.setClub_name("社团名称");
+            club.setClub_description("社团描述");
+            club.setClub_logo("社团图片");
+            club.setClub_president("社团负责人");
+            club.setClub_type("社团类型");
+            clubs.add(club);
+        }
+        return clubs;
+    }
 
 
     private Object testActivity(String cid){

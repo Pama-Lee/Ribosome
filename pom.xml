@@ -17,7 +17,7 @@
     <dependency>
         <groupId>cn.dev-space</groupId>
         <artifactId>Nucleus</artifactId>
-        <version>0.0.2-API</version>
+        <version>0.0.3-API</version>
     </dependency>
     <dependency>
         <groupId>org.projectlombok</groupId>

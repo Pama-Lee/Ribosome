@@ -17,5 +17,6 @@ public class errorType {
     public static final int Illegal_Parameter = 1001;
     public static final int Callback_Signature_Error = 1002;
     public static final int Callback_Data_Error = 1003;
+    public static final int Callback_Login_Token_Error = 1004;
     public static final int Unknown_Error = -1;
 }
