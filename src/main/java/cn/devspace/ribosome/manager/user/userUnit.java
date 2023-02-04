@@ -16,6 +16,7 @@ package cn.devspace.ribosome.manager.user;
 import cn.devspace.nucleus.Message.Log;
 import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.manager.database.MapperManager;
+import cn.devspace.ribosome.manager.permission.permissionType;
 import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
@@ -23,6 +24,8 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static cn.devspace.nucleus.App.Permission.unit.permissionManager.permissionManager;
 
 public class userUnit {
 
@@ -43,14 +46,39 @@ public class userUnit {
         queryWrapper.eq("openid", openID);
         User user = MapperManager.newInstance().userBaseMapper.selectOne(queryWrapper);
         if (user == null) {
-            User newUser = new User();
-            newUser.setEmail(String.valueOf(userInfo.get("email")));
-            newUser.setOpenid(openID);
-            MapperManager.newInstance().userBaseMapper.insert(newUser);
-            user = newUser;
+            // 自动创建用户 | Automatically create a user
+            user = register(String.valueOf(userInfo.get("email")), openID);
+        }else {
+            // 检查用户信息是否有更新 | Check if user information has been updated
+            if (!Objects.equals(user.getEmail(), String.valueOf(userInfo.get("email"))) || !Objects.equals(user.getAvatar(), String.valueOf(userInfo.get("avatar")))) {
+                user.setAvatar(String.valueOf(userInfo.get("avatar")));
+                user.setEmail(String.valueOf(userInfo.get("email")));
+                MapperManager.newInstance().userBaseMapper.updateById(user);
+            }
+            user.setAvatar("https://api.pamalee.cn/"+user.getAvatar());
         }
+
         return user;
     }
+
+
+    /**
+     * 注册新用户
+     * Register a new user
+     * @param email 用户邮箱｜User's email
+     * @param openID 用户的OpenID｜User's OpenID
+     * @return 返回新用户信息｜Returns new user information
+     */
+    public static User register(String email, String openID){
+        User newUser = new User();
+        newUser.setEmail(String.valueOf(email));
+        newUser.setOpenid(openID);
+        // 默认权限
+        newUser.setPermissionToken(permissionManager.newPermission(permissionType.PERMISSION_USER));
+        MapperManager.newInstance().userBaseMapper.insert(newUser);
+        return newUser;
+    }
+
 
     /**
      * 通过Token获取用户信息
@@ -66,6 +94,18 @@ public class userUnit {
         String openID = String.valueOf(login.get("openid"));
         return getUserByopenID(openID);
     }
+
+    /**
+     * 更新用户信息
+     * Update user information
+     * @param user 用户信息｜User information
+     * @return  返回更新后的用户信息｜Returns updated user information
+     */
+    public static User updateUser(User user) {
+        MapperManager.newInstance().userBaseMapper.updateById(user);
+        return user;
+    }
+
 
 
     /**

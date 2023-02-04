@@ -13,6 +13,7 @@
 
 package cn.devspace.ribosome.mapping;
 
+import cn.devspace.nucleus.App.Permission.unit.permissionManager;
 import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
 import cn.devspace.ribosome.entity.User;
@@ -61,9 +62,32 @@ public class user extends RouteManager {
         String[] params = {"token"};
         if (checkParams(args, params)) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
         User user = userUnit.getUserByToken(args.get("token"));
+        Map<String ,Object> data = new HashMap<>();
         if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
-        Map<String,Object> data = new HashMap<>();
+        List<String> permissions = permissionManager.permissionManager.getPermissionList(user.getPermissionToken());
         data.put("data",user);
+        data.put("permission",permissions);
+        data.put("code",200);
+        data.put("msg","success");
+        data.put("status","1");
+        return data;
+    }
+
+    @Router("updateUserInfo")
+    public Object updateUserInfo(Map<String, String> args){
+        String[] params = {"token","name","phone"};
+        if (checkParams(args, params)) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        User user = userUnit.getUserByToken(args.get("token"));
+        if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+        user.setName(args.get("name"));
+        user.setPhone(args.get("phone"));
+        User newUser = userUnit.updateUser(user);
+        return returnSuccess(newUser);
+    }
+
+    private Object returnSuccess(User newUser) {
+        Map<String,Object> data = new HashMap<>();
+        data.put("data",newUser);
         data.put("code",200);
         data.put("msg","success");
         data.put("status","1");

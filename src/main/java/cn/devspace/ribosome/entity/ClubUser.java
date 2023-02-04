@@ -14,7 +14,6 @@
 package cn.devspace.ribosome.entity;
 
 import cn.devspace.nucleus.Plugin.DataEntity;
-import cn.devspace.ribosome.manager.database.DataBaseManager;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import lombok.Data;
 

@@ -16,6 +16,7 @@ package cn.devspace.ribosome.mapping;
 import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
 import cn.devspace.ribosome.entity.Route;
+import com.baomidou.mybatisplus.extension.api.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class routes extends RouteManager {
         data.add(user());
         data.add(club());
         data.add(my());
+        data.add(admin());
         data.add(settings());
         map.put("data",data);
         return map;
@@ -68,6 +70,25 @@ public class routes extends RouteManager {
         return club;
     }
 
+
+    public Route admin(){
+        Route admin = new Route();
+        admin.setName("admin");
+        admin.setPath("/admin");
+        List<Route> adminChildren = new ArrayList<>();
+        Route clubManager = new Route();
+        clubManager.setName("club-manager");
+        clubManager.setPath("/admin/club-manager");
+        clubManager.setComponent("./admin/ClubManager");
+        Route activityManager = new Route();
+        activityManager.setName("activity-manager");
+        activityManager.setPath("/admin/activity-manager");
+        activityManager.setComponent("./admin/ActivityManager");
+        adminChildren.add(clubManager);
+        adminChildren.add(activityManager);
+        admin.setRoutes(adminChildren);
+        return admin;
+    }
 
     public Route my(){
         Route home = new Route();

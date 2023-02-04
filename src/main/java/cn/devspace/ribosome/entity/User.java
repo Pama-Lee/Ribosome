@@ -30,4 +30,5 @@ public class User extends DataEntity {
     private String permissionToken;
     private String avatar;
     private String slogan;
+    private String phone;
 }
