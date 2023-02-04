@@ -76,6 +76,10 @@ public class routes extends RouteManager {
         admin.setName("admin");
         admin.setPath("/admin");
         List<Route> adminChildren = new ArrayList<>();
+        Route dashboard = new Route();
+        dashboard.setName("dashboard");
+        dashboard.setPath("/admin/dashboard");
+        dashboard.setComponent("./admin/DashboardAnalysis");
         Route clubManager = new Route();
         clubManager.setName("club-manager");
         clubManager.setPath("/admin/club-manager");
@@ -86,6 +90,7 @@ public class routes extends RouteManager {
         activityManager.setComponent("./admin/ActivityManager");
         adminChildren.add(clubManager);
         adminChildren.add(activityManager);
+        adminChildren.add(dashboard);
         admin.setRoutes(adminChildren);
         return admin;
     }

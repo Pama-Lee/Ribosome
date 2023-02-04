@@ -14,6 +14,7 @@
 package cn.devspace.ribosome.manager.database;
 
 import cn.devspace.nucleus.Manager.Annotation.DataMapper;
+import cn.devspace.ribosome.entity.ClubApplication;
 import cn.devspace.ribosome.entity.Token;
 import cn.devspace.ribosome.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -32,6 +33,9 @@ public class MapperManager {
 
     @Resource
     public BaseMapper<User> userBaseMapper;
+
+    @Resource
+    public BaseMapper<ClubApplication> clubApplicationBaseMapper;
 
     public static MapperManager manager;
 

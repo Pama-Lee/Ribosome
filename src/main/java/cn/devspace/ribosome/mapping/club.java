@@ -17,9 +17,12 @@ import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
 import cn.devspace.ribosome.entity.Club;
 import cn.devspace.ribosome.entity.ClubActivity;
+import cn.devspace.ribosome.entity.ClubApplication;
 import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.error.errorType;
+import cn.devspace.ribosome.manager.database.MapperManager;
+import cn.devspace.ribosome.manager.user.userUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +76,20 @@ public class club extends RouteManager {
     @Router("getClubList")
     public Object getClubList(Map<String, String> args){
         return testList();
+    }
+
+    @Router("newApplication")
+    public Object newApplication(Map<String, String> args){
+        String[] params = {"cid", "token","reason","fee"};
+        if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        String uid = String.valueOf(userUnit.getUserByToken(args.get("token")).getUid());
+        ClubApplication clubApplication = new ClubApplication();
+        clubApplication.setCid(args.get("cid"));
+        clubApplication.setUid(uid);
+        clubApplication.setFee(args.get("fee"));
+        clubApplication.setReason(args.get("reason"));
+        MapperManager.newInstance().clubApplicationBaseMapper.insert(clubApplication);
+        return ResponseString(200,1,"success");
     }
 
 

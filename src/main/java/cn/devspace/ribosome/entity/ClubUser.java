@@ -15,16 +15,23 @@ package cn.devspace.ribosome.entity;
 
 import cn.devspace.nucleus.Plugin.DataEntity;
 import cn.devspace.ribosome.manager.database.MapperManager;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
+@TableName("ribo_club_user")
 public class ClubUser extends DataEntity {
 
+        @TableId(type = IdType.AUTO)
         private String cid;
         private String uid;
+        @TableField(exist = false)
         private String username;
         private String role;
-        private String status;
+        private Integer status;
         private String join_time;
         private String quit_time;
         private String join_reason;
