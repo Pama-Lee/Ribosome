@@ -7,7 +7,7 @@
  *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
- *   CreateTime: 2023/1/31
+ *   CreateTime: 2023/2/5
  *   Author: Li JiaKe(Pama)
  */
 
@@ -19,21 +19,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
-@TableName("ribo_club_activity")
-public class ClubActivity extends DataEntity {
-        @TableId(type = IdType.AUTO)
-        private String aid;
-        private String cid;
-        private String activity_name;
-        private String activity_description;
-        private String activity_logo;
-        private String activity_type;
-        private String activity_president;
-        private String activity_time;
-        private String activity_place;
-        private String activity_status;
-        private String activity_member;
-        private String activity_member_number;
-        private String activity_member_limit;
+@TableName("ribo_application_info")
+public class ApplicationInfo extends DataEntity {
+    @TableId(type = IdType.AUTO)
+    private Long iid;
+    private Long cid;
+    private String logo;
+    private String description;
+    private Integer visit;
+    private Date createTime;
 }

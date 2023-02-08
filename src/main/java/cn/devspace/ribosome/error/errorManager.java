@@ -38,6 +38,9 @@ public class errorManager extends ManagerBase {
                     ResponseString(code,-1,languageManager.translateMessage("Error.Callback.Data.Error"));
             case errorType.Callback_Login_Token_Error ->
                     ResponseString(code,-1,languageManager.translateMessage("Error.Callback.Login.Token.Error"));
+            case errorType.Illegal_Permission ->
+                    ResponseString(code,-1,languageManager.translateMessage("Error.Illegal.Permission"));
+
             case errorType.Unknown_Error -> UnknownError(code);
             default -> UnknownError(code);
         };

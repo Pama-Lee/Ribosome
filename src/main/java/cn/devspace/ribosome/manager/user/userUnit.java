@@ -61,6 +61,16 @@ public class userUnit {
         return user;
     }
 
+    public static User getUserByUID(String uid) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid", uid);
+        User user = MapperManager.newInstance().userBaseMapper.selectOne(queryWrapper);
+        if (user == null) {
+            return null;
+        }
+        return user;
+    }
+
 
     /**
      * 注册新用户

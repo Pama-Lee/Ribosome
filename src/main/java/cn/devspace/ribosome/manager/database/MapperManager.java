@@ -14,9 +14,7 @@
 package cn.devspace.ribosome.manager.database;
 
 import cn.devspace.nucleus.Manager.Annotation.DataMapper;
-import cn.devspace.ribosome.entity.ClubApplication;
-import cn.devspace.ribosome.entity.Token;
-import cn.devspace.ribosome.entity.User;
+import cn.devspace.ribosome.entity.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import javax.annotation.PostConstruct;
@@ -37,8 +35,33 @@ public class MapperManager {
     @Resource
     public BaseMapper<ClubApplication> clubApplicationBaseMapper;
 
+    @Resource
+    public BaseMapper<Club> clubBaseMapper;
+
+    @Resource
+    public BaseMapper<ClubUser> clubUserBaseMapper;
+
+    @Resource
+    public BaseMapper<ClubActivity> clubActivityBaseMapper;
+
+    @Resource
+    public BaseMapper<UserMessage> userMessageBaseMapper;
+
+    @Resource
+    public BaseMapper<ApplicationInfo> applicationInfoBaseMapper;
+
+
+
+
+
+
+
     public static MapperManager manager;
 
+    /**
+     * 初始化MapperManager
+     * 由于MapperManager是一个单例，所以在初始化时，将自身赋值给manager
+     */
     @PostConstruct
     public void init(){
         manager = this;

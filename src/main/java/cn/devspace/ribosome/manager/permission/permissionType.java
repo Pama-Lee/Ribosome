@@ -23,8 +23,14 @@ public class permissionType {
     // User's permission
     public static final String PERMISSION_USER = "user";
 
+    // 临时使用的社长权限
+    public static final String PERMISSION_PRESIDENT = "president";
+
+    public static final String NO_PERMISSION = "no_permission";
+
     // 社长的权限
     // President's permission
+    // TODO: 2023/2/4  之后应当接入Nucleus的权限系统, 目前使用社团表存储社长的权限
     public static String PERMISSION_PRESIDENT(String clubID){
         return "president_" + clubID;
     }

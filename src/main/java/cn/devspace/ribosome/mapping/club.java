@@ -13,20 +13,23 @@
 
 package cn.devspace.ribosome.mapping;
 
+import cn.devspace.nucleus.App.Permission.unit.permissionManager;
 import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
-import cn.devspace.ribosome.entity.Club;
-import cn.devspace.ribosome.entity.ClubActivity;
-import cn.devspace.ribosome.entity.ClubApplication;
-import cn.devspace.ribosome.entity.ClubUser;
+import cn.devspace.nucleus.Message.Log;
+import cn.devspace.ribosome.entity.*;
 import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.error.errorType;
 import cn.devspace.ribosome.manager.database.MapperManager;
+import cn.devspace.ribosome.manager.permission.permissionType;
 import cn.devspace.ribosome.manager.user.userUnit;
+import cn.devspace.ribosome.units.ClubUnits;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 社团相关接口
@@ -92,17 +95,62 @@ public class club extends RouteManager {
         return ResponseString(200,1,"success");
     }
 
+    @Router("updateClub")
+    public Object updateClub(Map<String, String> args){
+        String[] params = {"cid", "token"};
+        if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+
+        // 新建更改社团信息的对象
+        Club club = MapperManager.newInstance().clubBaseMapper.selectById(args.get("cid"));
+        if (club == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+
+        // 检查操作者是否存在
+        User operator = userUnit.getUserByToken(args.get("token"));
+        if (operator == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+
+        // 检查权限
+        // 查询操作者在社团中的角色
+        String role = ClubUnits.checkClubMember(args.get("cid"), String.valueOf(operator.getUid()));
+        if (Objects.equals(role, permissionType.NO_PERMISSION)){
+            // 判断是否是管理员
+            if(!permissionManager.permissionManager.checkPermission(operator.getPermissionToken(), permissionType.PERMISSION_ADMIN)){
+                return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
+            }else{
+                role = permissionType.PERMISSION_ADMIN;
+            }
+        }else {
+            if(permissionManager.permissionManager.checkPermission(operator.getPermissionToken(), permissionType.PERMISSION_ADMIN)){
+                role = permissionType.PERMISSION_ADMIN;
+            }
+        }
+
+
+        // 只有社长和管理员才有权限修改社团社长
+        if (args.get("president") != null){
+            if (!Objects.equals(role, permissionType.PERMISSION_PRESIDENT) && !Objects.equals(role, permissionType.PERMISSION_ADMIN)) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
+            club.setPresident(Integer.valueOf(args.get("president")));
+        }
+        // 只有管理员才有权限更改社团名称
+        if (args.get("name") != null){
+            if (!Objects.equals(role, permissionType.PERMISSION_ADMIN)) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
+            club.setName(args.get("name"));
+        }
+        if (args.get("description") != null){
+            club.setDescription(args.get("description"));
+        }
+        MapperManager.newInstance().clubBaseMapper.updateById(club);
+        return ResponseString(200,1,"success");
+    }
 
     private Object testList(){
         List<Club> clubs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Club club = new Club();
             club.setCid("1");
-            club.setClub_name("社团名称");
-            club.setClub_description("社团描述");
-            club.setClub_logo("社团图片");
-            club.setClub_president("社团负责人");
-            club.setClub_type("社团类型");
+            club.setName("社团名称");
+            club.setDescription("社团描述");
+            club.setLogo("社团图片");
+            club.setType("社团类型");
             clubs.add(club);
         }
         return clubs;
@@ -164,15 +212,14 @@ public class club extends RouteManager {
         int random = (int)(Math.random()*clubs.length);
 
         // 获取随机一个社团
-        club.setClub_name(clubs[random]);
+        club.setName(clubs[random]);
         // 获取随机一个社长
-        club.setClub_president(president[random]);
         // 获取随机一个社团描述
-        club.setClub_description(description[random]);
+        club.setDescription(description[random]);
         // 获取随机一个社团公告
         club.setAnnouncement(announcement[random]);
-        club.setClub_logo("https://github.com/Pama-Lee/Nucleus/raw/main/img/Nucleus-1@0.25x.png");
-        club.setClub_type("1");
+        club.setLogo("https://github.com/Pama-Lee/Nucleus/raw/main/img/Nucleus-1@0.25x.png");
+        club.setType("1");
         return club;
     }
 

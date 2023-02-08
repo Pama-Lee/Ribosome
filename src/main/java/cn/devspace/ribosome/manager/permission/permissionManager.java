@@ -16,6 +16,10 @@ package cn.devspace.ribosome.manager.permission;
 import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.manager.user.userUnit;
 
+/**
+ * 权限管理器
+ * Permission manager
+ */
 public class permissionManager {
     private final cn.devspace.nucleus.App.Permission.unit.permissionManager permissionManager = new cn.devspace.nucleus.App.Permission.unit.permissionManager();
 

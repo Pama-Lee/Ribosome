@@ -26,6 +26,7 @@ import lombok.Data;
 public class ClubUser extends DataEntity {
 
         @TableId(type = IdType.AUTO)
+        private String rid;
         private String cid;
         private String uid;
         @TableField(exist = false)
@@ -37,6 +38,7 @@ public class ClubUser extends DataEntity {
         private String join_reason;
         private String quit_reason;
 
+        @TableField(exist = false)
         private boolean isExist = true;
 
         public String getUsername() {

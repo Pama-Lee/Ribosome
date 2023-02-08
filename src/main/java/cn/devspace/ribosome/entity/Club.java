@@ -14,35 +14,52 @@
 package cn.devspace.ribosome.entity;
 
 import cn.devspace.nucleus.Plugin.DataEntity;
+import cn.devspace.ribosome.manager.user.userUnit;
+import cn.devspace.ribosome.units.ClubUnits;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.sql.Date;
+import java.util.Objects;
+
 @Data
 @TableName("ribo_club")
 public class Club extends DataEntity {
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private String cid;
-    private String club_name;
-    private String club_description;
-    private String club_logo;
-    private String club_type;
-    private String club_president;
+    private String name;
+    private String description;
+
+    private String logo;
+
+    private String type;
+
+    private Integer president;
+
     private String announcement;
-
-    private String club_status;
-
+    private Integer status;
+    private Date time;
 
     @TableField(exist = false)
-    private String club_number = setClubNumber();
+    private Integer number;
 
-    private String setClubNumber(){
+    @TableField(exist = false)
+    private String presidentName;
 
+    public int getNumber() {
+        return ClubUnits.getClubMemberCount(String.valueOf(cid));
+    }
 
-
-        return this.club_number = club_number;
+    public String getPresidentName(){
+        User user = userUnit.getUserByUID(String.valueOf(president));
+        if (user != null)
+            return user.getName();
+        else
+            return "Unknown User";
     }
 
 }
