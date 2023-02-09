@@ -13,9 +13,17 @@
 
 package cn.devspace.ribosome.mapping;
 
+import cn.devspace.nucleus.App.Permission.unit.permissionManager;
 import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
+import cn.devspace.ribosome.entity.Club;
+import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.entity.Route;
+import cn.devspace.ribosome.entity.User;
+import cn.devspace.ribosome.error.errorManager;
+import cn.devspace.ribosome.error.errorType;
+import cn.devspace.ribosome.manager.user.userUnit;
+import cn.devspace.ribosome.units.ClubUnits;
 import com.baomidou.mybatisplus.extension.api.R;
 
 import java.util.ArrayList;
@@ -26,25 +34,44 @@ import java.util.Map;
 public class routes extends RouteManager {
 
     @Router("getRoutes")
-    public Object routes(Map<String, String> args){
+    public Object getRoutes(Map<String, String> args){
+        String[] params = {"token"};
+        if (!checkParams(args,params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        User user = userUnit.getUserByToken(args.get("token"));
+        if (user==null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
+
+        // TODO: 2023/2/9 先预备获取列表, 以便后期拓展
+        List<String > roles = permissionManager.permissionManager.getPermissionList(user.getPermissionToken());
+        if (roles==null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
+
         Map<String,Object> map = new HashMap<>();
         List<Route> data = new ArrayList<>();
-        data.add(home());
-        data.add(user());
-        data.add(club());
-        data.add(my());
-        data.add(admin());
-        data.add(settings());
+
+        if (roles.contains("admin")) {
+            return data.add(admin());
+        }else {
+            List<ClubUser> clubs = userUnit.getClubByUID(user.getUid());
+            data.add(home());
+            data.add(my());
+            data.add(user());
+            if (clubs!=null) data.add(club(clubs));
+            data.add(settings());
+        }
         map.put("data",data);
         return map;
     }
 
-    public Route club(){
+    public Route club(List<ClubUser> clubs){
+        // 定义社团路由
+        // 社团主路由
         Route club = new Route();
         club.setName("club");
         club.setPath("/club");
+        // 社团子路由
         List<Route> clubChildren = new ArrayList<>();
+        // 社团列表
         Route clubList = new Route();
+        // 社团首页
         Route clubIndex = new Route();
         clubList.setName("club_List");
         clubList.setPath("/club/list");
@@ -55,13 +82,14 @@ public class routes extends RouteManager {
         clubChildren.add(clubIndex);
         clubChildren.add(clubList);
 
+        // 加入的社团
         List<Route> clubIndexChildren = new ArrayList<>();
         Route clubIndexHome = new Route();
         clubIndexHome.setPath("/club/detail/:id");
-        for (int i=1;i<4;i++){
+        for (ClubUser club1 : clubs) {
             Route route = new Route();
-            route.setName("社团"+i);
-            route.setPath("/club/detail/"+i);
+            route.setName(ClubUnits.getClubByCid(club1.getCid()).getName());
+            route.setPath("/club/detail/"+club1.getCid());
             clubIndexChildren.add(route);
         }
         clubIndexChildren.add(clubIndexHome);

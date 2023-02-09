@@ -15,6 +15,7 @@ package cn.devspace.ribosome.units;
 
 import cn.devspace.nucleus.App.Login.Login;
 import cn.devspace.nucleus.Message.Log;
+import cn.devspace.ribosome.entity.Club;
 import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.permission.permissionType;
@@ -57,6 +58,24 @@ public class ClubUnits {
             return permissionType.NO_PERMISSION;
         }else{
             return clubUsers.get(0).getRole();
+        }
+    }
+
+    /**
+     * 获取社团信息
+     * Get club information
+     * @param cid 社团ID | Club ID
+     * @return 社团信息 | Club information
+     */
+    public static Club getClubByCid(String cid){
+        BaseMapper<Club> clubBaseMapper = MapperManager.newInstance().clubBaseMapper;
+        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("cid",cid);
+        List<Club> clubs = clubBaseMapper.selectList(queryWrapper);
+        if(clubs.size() == 0){
+            return null;
+        }else{
+            return clubs.get(0);
         }
     }
 

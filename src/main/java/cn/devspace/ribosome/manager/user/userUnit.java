@@ -14,6 +14,8 @@
 package cn.devspace.ribosome.manager.user;
 
 import cn.devspace.nucleus.Message.Log;
+import cn.devspace.ribosome.entity.Club;
+import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.permission.permissionType;
@@ -22,6 +24,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -116,7 +119,15 @@ public class userUnit {
         return user;
     }
 
-
+    /**
+     * 通过uid获取用户所在的所有社团
+     * get all clubs by uid
+     * @param uid 用户uid | user uid
+     * @return 返回用户所在的所有社团 | Returns all clubs where the user is located
+     */
+    public static List<ClubUser> getClubByUID(Long uid) {
+        return MapperManager.newInstance().clubUserBaseMapper.selectList(new QueryWrapper<ClubUser>().eq("uid", uid));
+    }
 
     /**
      * 与RootJam对接的回调接口

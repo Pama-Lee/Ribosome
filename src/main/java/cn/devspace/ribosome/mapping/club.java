@@ -47,7 +47,9 @@ public class club extends RouteManager {
     public Object getClub(Map<String, String> args){
         String[] params = {"cid"};
         if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
-        return test(args.get("cid"));
+        Club club = MapperManager.newInstance().clubBaseMapper.selectById(args.get("cid"));
+        if (club == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
+        return club;
     }
 
     /**
@@ -60,7 +62,9 @@ public class club extends RouteManager {
     public Object getClubUser(Map<String, String> args){
         String[] params = {"cid"};
         if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
-        return testUser(args.get("cid"));
+        List<ClubUser> users = MapperManager.newInstance().clubUserBaseMapper.selectList(new QueryWrapper<ClubUser>().eq("cid", args.get("cid")));
+        if (users == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
+        return users;
     }
 
     /**
@@ -76,9 +80,34 @@ public class club extends RouteManager {
         return testActivity(args.get("cid"));
     }
 
-    @Router("getClubList")
+    /**
+     * 获取加入的社团列表
+     * Get the list of joined clubs
+     * @param args 传入POST参数 POST parameters
+     * @return 返回社团列表 Club list
+     */
+    @Router("getUserClub")
     public Object getClubList(Map<String, String> args){
-        return testList();
+        String[] params = {"token"};
+        if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        User user = userUnit.getUserByToken(args.get("token"));
+        if (user == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        List<ClubUser> clubs = userUnit.getClubByUID(user.getUid());
+        if (clubs == null) return ResponseString(200,0,"success");
+        return clubs;
+    }
+
+    /**
+     * 获取所有社团列表
+     * Get the list of all clubs
+     * @param args 传入POST参数 POST parameters
+     * @return 返回社团列表 Club list
+     */
+    @Router("getClubList")
+    public Object getAllClub(Map<String, String> args){
+        List<Club> clubs = MapperManager.newInstance().clubBaseMapper.selectList(new QueryWrapper<Club>());
+        if (clubs == null) return ResponseString(200,0,"success");
+        return clubs;
     }
 
     @Router("newApplication")
