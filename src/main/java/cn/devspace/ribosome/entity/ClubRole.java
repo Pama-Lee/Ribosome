@@ -7,37 +7,45 @@
  *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
- *   CreateTime: 2023/2/5
+ *   CreateTime: 2023/2/11
  *   Author: Li JiaKe(Pama)
  */
 
 package cn.devspace.ribosome.entity;
 
+import cn.devspace.nucleus.App.Permission.unit.permissionManager;
 import cn.devspace.nucleus.Plugin.DataEntity;
-import cn.devspace.ribosome.units.ClubUnits;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 
 @Data
-@TableName("ribo_application_info")
-public class ApplicationInfo extends DataEntity {
+@TableName("ribo_club_role")
+public class ClubRole extends DataEntity {
     @TableId(type = IdType.AUTO)
-    private Long iid;
+    private Long rid;
     private Long cid;
-    private String logo;
-    private String description;
-    private Integer visit;
-    private Date createTime;
+    private String name;
+    private String permissionToken;
 
+    /**
+     * 用于存储权限列表
+     * use for store permission list
+     */
     @TableField(exist = false)
-    private String clubName;
+    private List<String> permission;
 
-    public String getClubName() {
-        return ClubUnits.getClubByCid(String.valueOf(cid)).getName();
+    /**
+     * 用于存储权限列表
+     *
+     * @return
+     */
+    public List<String> getPermission() {
+        List<String> list = permissionManager.permissionManager.getPermissionList(permissionToken);
+        return list;
     }
 }

@@ -16,16 +16,16 @@ package cn.devspace.ribosome.mapping;
 import cn.devspace.nucleus.App.Permission.unit.permissionManager;
 import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
+import cn.devspace.ribosome.entity.ClubApplication;
 import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.entity.UserMessage;
 import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.error.errorType;
+import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.user.userUnit;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 用户相关接口
@@ -41,12 +41,40 @@ public class user extends RouteManager {
      */
     @Router("getUserMessageList")
     public Object getUserMessageList(Map<String, String> args) {
-        String[] params = {"uid", "token"};
+        String[] params = {"token"};
         if (checkParams(args, params)) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        User user = userUnit.getUserByToken(args.get("token"));
+        if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
         Map<String,Object> data = new HashMap<>();
-        Map<String,Object> list = new HashMap<>();
-        list.put("list",testMessage(args.get("uid")));
+        List<UserMessage> list = MapperManager.newInstance().userMessageBaseMapper.selectList(new QueryWrapper<UserMessage>().eq("uid", user.getUid()));
         data.put("data",list);
+        data.put("code",200);
+        data.put("msg","success");
+        return data;
+    }
+
+    @Router("getClubApplicationList")
+    public Object getClubApplicationList(Map<String, String> args){
+        String[] params = {"token"};
+        if (checkParams(args, params)) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        User user = userUnit.getUserByToken(args.get("token"));
+        if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+        Map<String,Object> data = new HashMap<>();
+        List<ClubApplication> list = MapperManager.newInstance().clubApplicationBaseMapper.selectList(new QueryWrapper<ClubApplication>().eq("uid",user.getUid()));
+        List<Map<String,Object>> list1 = new ArrayList<>();
+        for (ClubApplication clubApplication : list) {
+            Map<String,Object> map = new HashMap<>();
+            map.put("clubName",MapperManager.newInstance().clubBaseMapper.selectById(clubApplication.getCid()).getName());
+            map.put("clubId",clubApplication.getCid());
+            map.put("uid",clubApplication.getUid());
+            map.put("status",clubApplication.getStatus());
+            map.put("time",clubApplication.getCreateTime());
+            map.put("approvedTime",clubApplication.getUpdateTime());
+            list1.add(map);
+        }
+        data.put("data",list1);
+        data.put("code",200);
+        data.put("msg","success");
         return data;
     }
 
@@ -65,8 +93,17 @@ public class user extends RouteManager {
         Map<String ,Object> data = new HashMap<>();
         if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
         List<String> permissions = permissionManager.permissionManager.getPermissionList(user.getPermissionToken());
+
+        // 获取用户消息数量
+        Map<String,Object> messageCountMap = new HashMap<>();
+        Integer messageCount = MapperManager.newInstance().userMessageBaseMapper.selectCount(new QueryWrapper<UserMessage>().eq("uid",user.getUid()).eq("status",0));
+        Integer applicationCount = MapperManager.newInstance().clubApplicationBaseMapper.selectCount(new QueryWrapper<ClubApplication>().eq("uid",user.getUid()));
+        messageCountMap.put("messageCount",messageCount);
+        messageCountMap.put("applicationCount",applicationCount);
+
         data.put("data",user);
         data.put("permission",permissions);
+        data.put("messageCount",messageCountMap);
         data.put("code",200);
         data.put("msg","success");
         data.put("status","1");

@@ -47,8 +47,7 @@ public class auth extends RouteManager{
         }
         try {
             Map<String ,Object> backMap = userUnit.requestToken(args.get("token"));
-            if (backMap == null || !Objects.equals(String.valueOf(backMap.get("msg")), "success")){
-                Log.sendLog(backMap.get("msg").toString());
+            if (backMap == null || backMap.get("openid") == null){
                 return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
             }
             User user = userUnit.getUserByopenID(String.valueOf(backMap.get("openid")));

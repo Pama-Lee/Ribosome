@@ -26,10 +26,7 @@ import cn.devspace.ribosome.manager.user.userUnit;
 import cn.devspace.ribosome.units.ClubUnits;
 import com.baomidou.mybatisplus.extension.api.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class routes extends RouteManager {
 
@@ -48,24 +45,25 @@ public class routes extends RouteManager {
         List<Route> data = new ArrayList<>();
 
         if (roles.contains("admin")) {
-            return data.add(admin());
+            data.add(admin());
         }else {
             List<ClubUser> clubs = userUnit.getClubByUID(user.getUid());
             data.add(home());
             data.add(my());
             data.add(user());
-            if (clubs!=null) data.add(club(clubs));
+            if (clubs!=null) data.add(club(clubs,user));
             data.add(settings());
         }
         map.put("data",data);
         return map;
     }
 
-    public Route club(List<ClubUser> clubs){
+    public Route club(List<ClubUser> clubs, User user){
         // 定义社团路由
         // 社团主路由
         Route club = new Route();
-        club.setName("club");
+        club.setName("Club");
+        club.setIcon("club");
         club.setPath("/club");
         // 社团子路由
         List<Route> clubChildren = new ArrayList<>();
@@ -73,10 +71,10 @@ public class routes extends RouteManager {
         Route clubList = new Route();
         // 社团首页
         Route clubIndex = new Route();
-        clubList.setName("club_List");
+        clubList.setName("Club List");
         clubList.setPath("/club/list");
         clubList.setComponent("./club/ClubList");
-        clubIndex.setName("club_Index");
+        clubIndex.setName("Club Center");
         clubIndex.setPath("/club/index");
         clubIndex.setComponent("./club/ClubIndex");
         clubChildren.add(clubIndex);
@@ -87,8 +85,12 @@ public class routes extends RouteManager {
         Route clubIndexHome = new Route();
         clubIndexHome.setPath("/club/detail/:id");
         for (ClubUser club1 : clubs) {
+
             Route route = new Route();
-            route.setName(ClubUnits.getClubByCid(club1.getCid()).getName());
+            Club clubEntity = ClubUnits.getClubByCid(club1.getCid());
+            if (clubEntity==null) continue;
+
+            route.setName(clubEntity.getName());
             route.setPath("/club/detail/"+club1.getCid());
             clubIndexChildren.add(route);
         }
@@ -101,19 +103,23 @@ public class routes extends RouteManager {
 
     public Route admin(){
         Route admin = new Route();
-        admin.setName("admin");
+        admin.setName("Admin");
+        admin.setIcon("admin");
         admin.setPath("/admin");
         List<Route> adminChildren = new ArrayList<>();
         Route dashboard = new Route();
-        dashboard.setName("dashboard");
+        dashboard.setName("Dashboard");
+        dashboard.setIcon("dashboard");
         dashboard.setPath("/admin/dashboard");
         dashboard.setComponent("./admin/DashboardAnalysis");
         Route clubManager = new Route();
-        clubManager.setName("club-manager");
+        clubManager.setName("Club Manager");
+        clubManager.setIcon("club");
         clubManager.setPath("/admin/club-manager");
         clubManager.setComponent("./admin/ClubManager");
         Route activityManager = new Route();
-        activityManager.setName("activity-manager");
+        activityManager.setName("Activity Manager");
+        activityManager.setIcon("activity");
         activityManager.setPath("/admin/activity-manager");
         activityManager.setComponent("./admin/ActivityManager");
         adminChildren.add(clubManager);
@@ -125,24 +131,27 @@ public class routes extends RouteManager {
 
     public Route my(){
         Route home = new Route();
-        home.setName("个人中心");
+        home.setName("About Me");
         home.setPath("/accountcenter");
+        home.setIcon("my");
         home.setComponent("./AccountCenter");
         return home;
     }
 
     public Route settings(){
         Route home = new Route();
-        home.setName("个人设置");
+        home.setName("Settings");
         home.setPath("/accountsettings");
+        home.setIcon("settings");
         home.setComponent("./AccountSettings");
         return home;
     }
 
     public Route home(){
         Route home = new Route();
-        home.setName("welcome");
+        home.setName("Welcome");
         home.setPath("/welcome");
+        home.setIcon("home");
         home.setComponent("./Welcome");
         return home;
     }

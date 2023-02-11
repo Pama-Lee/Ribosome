@@ -19,6 +19,7 @@ import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.permission.permissionType;
+import cn.devspace.ribosome.units.jsonUnits;
 import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
@@ -158,8 +159,13 @@ public class userUnit {
         param.put("token", token);
         param.put("appid", "694873c0726514c1");
         String back = HttpUtil.post("https://api.pamalee.cn/Login/openID",param);
-        Log.sendLog(back);
         Map<String ,Object> backMap = new Gson().fromJson(back, Map.class);
+        Log.sendLog(back);
+        if (backMap == null){
+            Log.sendLog("backMap is null");
+            return null;
+        }
+        Log.sendLog(String.valueOf(backMap));
         return backMap;
     }
 }

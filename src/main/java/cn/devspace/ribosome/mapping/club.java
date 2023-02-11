@@ -110,11 +110,21 @@ public class club extends RouteManager {
         return clubs;
     }
 
+    /**
+     * 新增新的社团申请
+     * Add a new club application
+     * @param args 传入POST参数 POST parameters
+     * @return 返回社团申请信息 Club application information
+     */
     @Router("newApplication")
     public Object newApplication(Map<String, String> args){
         String[] params = {"cid", "token","reason","fee"};
         if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
         String uid = String.valueOf(userUnit.getUserByToken(args.get("token")).getUid());
+        // 检查是否已经申请过
+        List<ClubApplication> applications = MapperManager.newInstance().clubApplicationBaseMapper.selectList(new QueryWrapper<ClubApplication>().eq("uid", uid).eq("cid", args.get("cid")));
+        if (applications.size() != 0) return errorManager.newInstance().catchErrors(errorType.APPLICATION_Already_Applied);
+
         ClubApplication clubApplication = new ClubApplication();
         clubApplication.setCid(args.get("cid"));
         clubApplication.setUid(uid);
@@ -122,6 +132,16 @@ public class club extends RouteManager {
         clubApplication.setReason(args.get("reason"));
         MapperManager.newInstance().clubApplicationBaseMapper.insert(clubApplication);
         return ResponseString(200,1,"success");
+    }
+
+    @Router("getClubApplicationInfo")
+    public Object getClubApplicationInfo(Map<String, String> args){
+        String[] params = {"cid"};
+        if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        ApplicationInfo applicationInfo = MapperManager.newInstance().applicationInfoBaseMapper.selectById(args.get("cid"));
+        if (applicationInfo == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+
+        return applicationInfo;
     }
 
     @Router("updateClub")
@@ -170,6 +190,23 @@ public class club extends RouteManager {
         MapperManager.newInstance().clubBaseMapper.updateById(club);
         return ResponseString(200,1,"success");
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private Object testList(){
         List<Club> clubs = new ArrayList<>();
