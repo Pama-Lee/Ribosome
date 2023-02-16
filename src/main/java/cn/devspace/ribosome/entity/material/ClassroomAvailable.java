@@ -7,13 +7,14 @@
  *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
- *   CreateTime: 2023/2/2
+ *   CreateTime: 2023/2/12
  *   Author: Li JiaKe(Pama)
  */
 
-package cn.devspace.ribosome.entity;
+package cn.devspace.ribosome.entity.material;
 
 import cn.devspace.nucleus.Plugin.DataEntity;
+import cn.devspace.ribosome.manager.database.MapperManager;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -22,14 +23,21 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@TableName("ribo_user_message")
-public class UserMessage extends DataEntity {
+@TableName("ribo_material_classroom_available")
+public class ClassroomAvailable extends DataEntity {
+
     @TableId(type = IdType.AUTO)
-    private Long mid;
-    private String title;
-    private String content;
-    private Long uid;
-    private Date time;
-    private String status;
+    private Long aid;
+    private Long cid;
+    private String availableTime;
+    private String unavailableDay;
+    private boolean isAvailable;
+    private Date createTime;
+
+
+    public String getClassroomName() {
+        return MapperManager.newInstance().classroomBaseMapper.selectById(cid).getName();
+    }
+
 
 }

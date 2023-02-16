@@ -20,6 +20,7 @@ import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.manager.database.DataBaseManager;
 import cn.devspace.ribosome.manager.languageManager;
 import cn.devspace.ribosome.mapping.*;
+import cn.devspace.ribosome.mapping.admin.adminBase;
 
 
 /**
@@ -52,7 +53,8 @@ public class Main extends PluginBase {
         initRoute(routes.class);
         initRoute(club.class);
         initRoute(user.class);
-        initRoute(admin.class);
+        initRoute(adminBase.class);
+        initRoute(material.class);
     }
 
     @Override

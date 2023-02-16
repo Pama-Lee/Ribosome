@@ -7,29 +7,32 @@
  *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
- *   CreateTime: 2023/2/2
+ *   CreateTime: 2023/2/11
  *   Author: Li JiaKe(Pama)
  */
 
 package cn.devspace.ribosome.entity;
 
 import cn.devspace.nucleus.Plugin.DataEntity;
+import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
 
+
 @Data
-@TableName("ribo_user_message")
-public class UserMessage extends DataEntity {
+@TableName("ribo_club_announcement")
+public class ClubAnnouncement extends DataEntity {
     @TableId(type = IdType.AUTO)
-    private Long mid;
+    private Long anid;
+    private String cid;
     private String title;
     private String content;
-    private Long uid;
-    private Date time;
-    private String status;
+    private String createUser;
+    private Date createTime;
 
 }
