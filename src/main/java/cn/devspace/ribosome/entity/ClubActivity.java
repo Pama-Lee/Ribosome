@@ -38,6 +38,7 @@ public class ClubActivity extends DataEntity {
         private String activity_president;
         private String activity_time;
         private String activity_place;
+        @Column(columnDefinition = "int default 0")
         private String activity_status;
         private String activity_member;
         private String activity_member_number;

@@ -21,6 +21,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.hibernate.annotations.Columns;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -46,7 +48,10 @@ public class Club extends DataEntity {
     private Integer president;
 
     private String announcement;
+
+    @Column(columnDefinition = "int default 0")
     private Integer status;
+    @CreationTimestamp
     private Date time;
 
     @TableField(exist = false)

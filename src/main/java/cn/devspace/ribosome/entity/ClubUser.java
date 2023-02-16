@@ -38,6 +38,7 @@ public class ClubUser extends DataEntity {
         @TableField(exist = false)
         private String username;
         private String role;
+        @Column(columnDefinition = "int default 0")
         private Integer status;
         private String joinTime;
         private String quitTime;

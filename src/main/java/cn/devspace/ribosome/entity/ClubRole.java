@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class ClubRole extends DataEntity {
     private String cid;
     private String role;
     private String permissionToken;
+    @CreationTimestamp
     private Date createTime;
 
     /**
@@ -46,6 +48,7 @@ public class ClubRole extends DataEntity {
      * use for store permission list
      */
     @TableField(exist = false)
+    @Transient
     private List<String> permission;
 
     /**

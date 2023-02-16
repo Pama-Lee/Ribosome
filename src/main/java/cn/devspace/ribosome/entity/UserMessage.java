@@ -35,6 +35,7 @@ public class UserMessage extends DataEntity {
     private String content;
     private Long uid;
     private Date time;
+    @Column(columnDefinition = "int default 0")
     private String status;
 
 }

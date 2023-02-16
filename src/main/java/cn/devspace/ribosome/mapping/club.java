@@ -389,10 +389,10 @@ public class club extends RouteManager {
         if (operator == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
         if (!ClubUnits.isPresident(args.get("cid"),String.valueOf(operator.getUid()))) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
         // 检查是否存在这个角色
-        ClubRole clubRole = MapperManager.newInstance().clubRoleBaseMapper.selectOne(new QueryWrapper<ClubRole>().eq("cid", args.get("cid")).eq("rid", args.get("rid")));
+        ClubRole clubRole = MapperManager.newInstance().clubRoleBaseMapper.selectOne(new QueryWrapper<ClubRole>().eq("cid", args.get("cid")).eq("rid", args.get("rid")).last("limit 1"));
         if (clubRole == null) return errorManager.newInstance().catchErrors(errorType.ROLE_Not_Found);
 
-        ClubUser clubUser = MapperManager.newInstance().clubUserBaseMapper.selectOne(new QueryWrapper<ClubUser>().eq("cid", args.get("cid")).eq("uid", args.get("uid")));
+        ClubUser clubUser = MapperManager.newInstance().clubUserBaseMapper.selectOne(new QueryWrapper<ClubUser>().eq("cid", args.get("cid")).eq("uid", args.get("uid")).last("limit 1"));
         if (clubUser == null) return errorManager.newInstance().catchErrors(errorType.USER_Not_Found);
         clubUser.setRole(args.get("rid"));
         MapperManager.newInstance().clubUserBaseMapper.updateById(clubUser);

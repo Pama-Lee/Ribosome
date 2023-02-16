@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -38,6 +39,7 @@ public class ClubAnnouncement extends DataEntity {
     private String title;
     private String content;
     private String createUser;
+    @CreationTimestamp
     private Date createTime;
 
 }

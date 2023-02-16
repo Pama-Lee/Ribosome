@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -37,6 +38,7 @@ public class ClassroomAvailable extends DataEntity {
     private String availableTime;
     private String unavailableDay;
     private boolean isAvailable;
+    @CreationTimestamp
     private Date createTime;
 
 

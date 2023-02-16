@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -36,7 +37,9 @@ public class ApplicationInfo extends DataEntity {
     private Long cid;
     private String logo;
     private String description;
+    @Column(columnDefinition = "int default 0")
     private Integer visit;
+    @CreationTimestamp
     private Date createTime;
 
     @TableField(exist = false)

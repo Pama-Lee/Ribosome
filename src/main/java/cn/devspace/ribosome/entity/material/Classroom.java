@@ -34,6 +34,7 @@ public class Classroom extends DataEntity {
     private String name;
     private String location;
     private String type;
+    @Column(columnDefinition = "int default 1")
     private String status;
 
 }

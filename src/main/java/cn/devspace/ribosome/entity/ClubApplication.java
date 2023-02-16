@@ -20,6 +20,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -60,6 +62,7 @@ public class ClubApplication extends DataEntity {
         /**
          * 是否通过
          */
+        @Column(columnDefinition = "int default 0")
         private Integer status;
 
         /**
@@ -70,16 +73,19 @@ public class ClubApplication extends DataEntity {
         /**
          * 更新时间
          */
+        @UpdateTimestamp
         private Date updateTime;
 
         /**
          * 创建时间
          */
+        @CreationTimestamp
         private Date createTime;
 
         /**
          * 是否删除(0-未删, 1-已删)
          */
+        @Column(columnDefinition = "int default 0")
         private Integer isDeleted;
 
         @TableField(exist = false)

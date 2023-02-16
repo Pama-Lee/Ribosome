@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.mapper.Mapper;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -44,7 +45,9 @@ public class ClassroomArrangement extends DataEntity {
     private String day;
     private String reason;
     private String uid;
+    @Column(columnDefinition = "int default 0")
     private String status;
+    @CreationTimestamp
     private Date createTime;
 
     @TableField(exist = false)
