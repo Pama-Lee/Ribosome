@@ -24,7 +24,6 @@ import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.error.errorType;
 import cn.devspace.ribosome.manager.user.userUnit;
 import cn.devspace.ribosome.units.ClubUnits;
-import com.baomidou.mybatisplus.extension.api.R;
 
 import java.util.*;
 
