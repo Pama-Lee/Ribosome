@@ -21,25 +21,38 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.persistence.*;
+
 @Data
 @TableName("ribo_club_user")
+@Entity
+@Table(name = "ribo_club_user")
 public class ClubUser extends DataEntity {
 
         @TableId(type = IdType.AUTO)
-        private String rid;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long rid;
         private String cid;
         private String uid;
         @TableField(exist = false)
         private String username;
         private String role;
         private Integer status;
-        private String join_time;
-        private String quit_time;
-        private String join_reason;
-        private String quit_reason;
+        private String joinTime;
+        private String quitTime;
+        private String joinReason;
+        private String quitReason;
 
         @TableField(exist = false)
         private boolean isExist = true;
+
+        @TableField(exist = false)
+        private String roleName;
+
+        public String getRoleName() {
+            return MapperManager.manager.clubRoleBaseMapper.selectById(role).getRole();
+        }
 
         public String getUsername() {
             String username = MapperManager.manager.userBaseMapper.selectById(uid).getName();

@@ -16,10 +16,12 @@ import cn.devspace.nucleus.Manager.Command.CommandManager;
 import cn.devspace.nucleus.Manager.DataBase.DataBase;
 import cn.devspace.nucleus.Plugin.PluginBase;
 import cn.devspace.ribosome.command.Command;
+import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.manager.database.DataBaseManager;
 import cn.devspace.ribosome.manager.languageManager;
 import cn.devspace.ribosome.mapping.*;
+import cn.devspace.ribosome.mapping.admin.adminBase;
 
 
 /**
@@ -52,7 +54,12 @@ public class Main extends PluginBase {
         initRoute(routes.class);
         initRoute(club.class);
         initRoute(user.class);
-        initRoute(admin.class);
+        initRoute(adminBase.class);
+        initRoute(material.class);
+    }
+
+    public void initDatabase(){
+        DataBase dataBase = new DataBase(this.getClass(), new User());
     }
 
     @Override

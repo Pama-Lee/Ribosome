@@ -17,6 +17,8 @@ import cn.devspace.nucleus.Message.Log;
 import cn.devspace.ribosome.entity.Club;
 import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.entity.User;
+import cn.devspace.ribosome.entity.UserMessage;
+import cn.devspace.ribosome.manager.message.messageManager;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.permission.permissionType;
 import cn.devspace.ribosome.units.jsonUnits;
@@ -47,7 +49,7 @@ public class userUnit {
             return null;
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("openid", openID);
+        queryWrapper.eq("openid", openID).last("LIMIT 1");
         User user = MapperManager.newInstance().userBaseMapper.selectOne(queryWrapper);
         if (user == null) {
             // 自动创建用户 | Automatically create a user
@@ -67,7 +69,7 @@ public class userUnit {
 
     public static User getUserByUID(String uid) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uid", uid);
+        queryWrapper.eq("uid", uid).last("LIMIT 1");
         User user = MapperManager.newInstance().userBaseMapper.selectOne(queryWrapper);
         if (user == null) {
             return null;
@@ -90,6 +92,9 @@ public class userUnit {
         // 默认权限
         newUser.setPermissionToken(permissionManager.newPermission(permissionType.PERMISSION_USER));
         MapperManager.newInstance().userBaseMapper.insert(newUser);
+        // 发送欢迎邮件
+        messageManager.welcomeNewUser(String.valueOf(newUser.getUid()));
+
         return newUser;
     }
 

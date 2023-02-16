@@ -15,22 +15,31 @@ package cn.devspace.ribosome.entity;
 
 import cn.devspace.nucleus.App.Permission.unit.permissionManager;
 import cn.devspace.nucleus.Plugin.DataEntity;
+import cn.devspace.ribosome.manager.permission.action.clubActionType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
 @TableName("ribo_club_role")
+@Entity
+@Table(name = "ribo_club_role")
 public class ClubRole extends DataEntity {
     @TableId(type = IdType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rid;
-    private Long cid;
-    private String name;
+    private String cid;
+    private String role;
     private String permissionToken;
+    private Date createTime;
 
     /**
      * 用于存储权限列表
@@ -46,6 +55,21 @@ public class ClubRole extends DataEntity {
      */
     public List<String> getPermission() {
         List<String> list = permissionManager.permissionManager.getPermissionList(permissionToken);
-        return list;
+        List<String> res = new ArrayList<>();
+        for (String s : list) {
+            clubActionType action = clubActionType.valueOf(s);
+            res.add(action.getDescription());
+        }
+        return res;
+    }
+
+    public List<clubActionType> getPermissionList(){
+        List<String> list = permissionManager.permissionManager.getPermissionList(permissionToken);
+        List<clubActionType> res = new ArrayList<>();
+        for (String s : list) {
+            clubActionType action = clubActionType.valueOf(s);
+            res.add(action);
+        }
+        return res;
     }
 }

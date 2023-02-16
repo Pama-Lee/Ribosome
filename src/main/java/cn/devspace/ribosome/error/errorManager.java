@@ -42,6 +42,16 @@ public class errorManager extends ManagerBase {
                     ResponseString(code,-1,languageManager.translateMessage("Error.Illegal.Permission"));
             case errorType.APPLICATION_Already_Applied ->
                     ResponseString(code,-1,languageManager.translateMessage("Error.Application.Already.Applied"));
+            case errorType.APPLICATION_Not_Found ->
+                    ResponseString(code,-1,languageManager.translateMessage("Error.Application.Not.Found"));
+            case errorType.APPLICATION_Status ->
+                    ResponseString(code,-1,languageManager.translateMessage("Error.Application.Status"));
+            case errorType.ROLE_Not_Found ->
+                    ResponseString(code,-1,languageManager.translateMessage("Error.Role.Not.Found"));
+            case errorType.USER_Not_Found ->
+                    ResponseString(code,-1,languageManager.translateMessage("Error.User.Not.Found"));
+            case errorType.Database_Error ->
+                    ResponseString(code,-1,languageManager.translateMessage("Error.Database.Error"));
 
             case errorType.Unknown_Error -> UnknownError(code);
             default -> UnknownError(code);

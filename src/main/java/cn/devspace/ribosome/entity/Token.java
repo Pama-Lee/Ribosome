@@ -17,16 +17,21 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Date;
 
 
 @Data
 @TableName("ribo_token")
+@Entity
+@Table(name = "ribo_token")
 public class Token {
     /**
      * 主键
      */
     @TableId
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tid;
 
     /**

@@ -17,6 +17,7 @@ import cn.devspace.nucleus.App.Permission.unit.permissionManager;
 import cn.devspace.nucleus.Manager.Annotation.Router;
 import cn.devspace.nucleus.Manager.RouteManager;
 import cn.devspace.ribosome.entity.ClubApplication;
+import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.entity.User;
 import cn.devspace.ribosome.entity.UserMessage;
 import cn.devspace.ribosome.error.errorManager;
@@ -39,7 +40,7 @@ public class user extends RouteManager {
      * @param args uid,token
      * @return List<UserMessage>
      */
-    @Router("getUserMessageList")
+    @Router("user/getUserMessageList")
     public Object getUserMessageList(Map<String, String> args) {
         String[] params = {"token"};
         if (checkParams(args, params)) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
@@ -47,13 +48,37 @@ public class user extends RouteManager {
         if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
         Map<String,Object> data = new HashMap<>();
         List<UserMessage> list = MapperManager.newInstance().userMessageBaseMapper.selectList(new QueryWrapper<UserMessage>().eq("uid", user.getUid()));
+        for (UserMessage userMessage: list){
+            if (userMessage.getStatus().equals("0"))
+            {
+                userMessage.setStatus("1");
+                MapperManager.newInstance().userMessageBaseMapper.updateById(userMessage);
+            }
+        }
         data.put("data",list);
         data.put("code",200);
         data.put("msg","success");
         return data;
     }
 
-    @Router("getClubApplicationList")
+    /**
+     * 获取加入的社团列表
+     * Get the list of joined clubs
+     * @param args 传入POST参数 POST parameters
+     * @return 返回社团列表 Club list
+     */
+    @Router("getUserClub")
+    public Object getClubList(Map<String, String> args){
+        String[] params = {"token"};
+        if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        User user = userUnit.getUserByToken(args.get("token"));
+        if (user == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        List<ClubUser> clubs = userUnit.getClubByUID(user.getUid());
+        if (clubs == null) return ResponseString(200,0,"success");
+        return clubs;
+    }
+
+    @Router("user/getClubApplicationList")
     public Object getClubApplicationList(Map<String, String> args){
         String[] params = {"token"};
         if (checkParams(args, params)) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
@@ -121,6 +146,8 @@ public class user extends RouteManager {
         User newUser = userUnit.updateUser(user);
         return returnSuccess(newUser);
     }
+
+
 
     private Object returnSuccess(User newUser) {
         Map<String,Object> data = new HashMap<>();

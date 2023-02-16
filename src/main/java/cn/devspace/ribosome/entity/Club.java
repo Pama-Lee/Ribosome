@@ -22,15 +22,20 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
 @Data
 @TableName("ribo_club")
+@Entity
+@Table(name = "ribo_club")
 public class Club extends DataEntity {
 
     @TableId(type = IdType.AUTO)
-    private String cid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cid;
     private String name;
     private String description;
 

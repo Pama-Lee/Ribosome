@@ -18,11 +18,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.hibernate.annotations.Generated;
+
+import javax.persistence.*;
 
 @Data
 @TableName("ribo_user")
+@Entity
+@Table(name = "ribo_user")
 public class User extends DataEntity {
     @TableId(type = IdType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
     private String openid;
     private String name;

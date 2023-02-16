@@ -14,19 +14,27 @@
 package cn.devspace.ribosome.entity;
 
 import cn.devspace.nucleus.Plugin.DataEntity;
+import cn.devspace.ribosome.manager.user.userUnit;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.sql.Date;
 
 @Data
 @TableName("ribo_club_application")
+@Entity
+@Table(name = "ribo_club_application")
 public class ClubApplication extends DataEntity {
-        private static final long serialVersionUID = 1L;
-
         /**
          * 主键
          */
+        @TableId(type = IdType.AUTO)
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long aid;
 
         /**
@@ -73,6 +81,13 @@ public class ClubApplication extends DataEntity {
          * 是否删除(0-未删, 1-已删)
          */
         private Integer isDeleted;
+
+        @TableField(exist = false)
+        private String username;
+
+        public String getUsername() {
+            return userUnit.getUserByUID(uid).getName();
+        }
 
     }
 

@@ -7,11 +7,11 @@
  *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
- *   CreateTime: 2023/1/31
+ *   CreateTime: 2023/2/12
  *   Author: Li JiaKe(Pama)
  */
 
-package cn.devspace.ribosome.entity;
+package cn.devspace.ribosome.entity.material;
 
 import cn.devspace.nucleus.Plugin.DataEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -22,24 +22,18 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
-@TableName("ribo_club_activity")
+@TableName("ribo_material_classroom")
 @Entity
-@Table(name = "ribo_club_activity")
-public class ClubActivity extends DataEntity {
-        @TableId(type = IdType.AUTO)
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long aid;
-        private String cid;
-        private String activity_name;
-        private String activity_description;
-        private String activity_logo;
-        private String activity_type;
-        private String activity_president;
-        private String activity_time;
-        private String activity_place;
-        private String activity_status;
-        private String activity_member;
-        private String activity_member_number;
-        private String activity_member_limit;
+@Table(name = "ribo_material_classroom")
+public class Classroom extends DataEntity {
+
+    @TableId(type = IdType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cid;
+    private String name;
+    private String location;
+    private String type;
+    private String status;
+
 }

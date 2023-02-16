@@ -7,11 +7,24 @@
  *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
  *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
  *
+ *   CreateTime: 2023/2/12
+ *   Author: Li JiaKe(Pama)
+ */
+
+/*
+ *
+ *   .______       __  .______     ______        _______.  ______   .___  ___.  _______
+ *   |   _  \     |  | |   _  \   /  __  \      /       | /  __  \  |   \/   | |   ____|
+ *   |  |_)  |    |  | |  |_)  | |  |  |  |    |   (----`|  |  |  | |  \  /  | |  |__
+ *   |      /     |  | |   _  <  |  |  |  |     \   \    |  |  |  | |  |\/|  | |   __|
+ *   |  |\  \----.|  | |  |_)  | |  `--'  | .----)   |   |  `--'  | |  |  |  | |  |____
+ *   | _| `._____||__| |______/   \______/  |_______/     \______/  |__|  |__| |_______|
+ *
  *   CreateTime: 2023/2/5
  *   Author: Li JiaKe(Pama)
  */
 
-package cn.devspace.ribosome.mapping;
+package cn.devspace.ribosome.mapping.admin;
 
 import cn.devspace.nucleus.App.Permission.entity.Permission;
 import cn.devspace.nucleus.App.Permission.unit.permissionManager;
@@ -29,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class admin extends RouteManager {
+public class adminBase extends RouteManager {
     @Router("admin/getClubList")
     public Object getClubList(Map<String, String> args){
         String[] params = {"token"};
