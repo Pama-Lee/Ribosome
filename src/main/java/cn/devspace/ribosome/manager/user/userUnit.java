@@ -52,8 +52,7 @@ public class userUnit {
         queryWrapper.eq("openid", openID).last("LIMIT 1");
         User user = MapperManager.newInstance().userBaseMapper.selectOne(queryWrapper);
         if (user == null) {
-            // 自动创建用户 | Automatically create a user
-            user = register(String.valueOf(userInfo.get("email")), openID);
+           return null;
         }else {
             // 检查用户信息是否有更新 | Check if user information has been updated
             if (!Objects.equals(user.getEmail(), String.valueOf(userInfo.get("email"))) || !Objects.equals(user.getAvatar(), String.valueOf(userInfo.get("avatar")))) {
@@ -91,7 +90,14 @@ public class userUnit {
         newUser.setOpenid(openID);
         // 默认权限
         newUser.setPermissionToken(permissionManager.newPermission(permissionType.PERMISSION_USER));
+        // 检查该openid是否已经注册过
+        User user = MapperManager.newInstance().userBaseMapper.selectOne(new QueryWrapper<User>().eq("openid", openID).last("LIMIT 1"));
+        if (user != null) {
+            return user;
+        }
         MapperManager.newInstance().userBaseMapper.insert(newUser);
+
+
         // 发送欢迎邮件
         messageManager.welcomeNewUser(String.valueOf(newUser.getUid()));
 
@@ -141,7 +147,7 @@ public class userUnit {
      * @param openID 传入的数据｜The incoming data
      * @return 返回响应给RootJam的数据|Returns a response to RootJam data
      */
-    private static Map<String,Object> requestUserInfo(String openID) {
+    public static Map<String,Object> requestUserInfo(String openID) {
         Map<String ,Object> param = new HashMap<>(2);
         param.put("openid", openID);
         param.put("appid", "694873c0726514c1");
@@ -170,7 +176,6 @@ public class userUnit {
             Log.sendLog("backMap is null");
             return null;
         }
-        Log.sendLog(String.valueOf(backMap));
         return backMap;
     }
 }

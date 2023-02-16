@@ -34,8 +34,16 @@ public class routes extends RouteManager {
         String[] params = {"token"};
         if (!checkParams(args,params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
         User user = userUnit.getUserByToken(args.get("token"));
-        if (user==null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
-
+        if (user==null) {
+            Map<String,Object> defaultMap = new HashMap<>();
+            List<Route> data = new ArrayList<>();
+                data.add(home());
+                data.add(my());
+                data.add(user());
+                data.add(settings());
+            defaultMap.put("data",data);
+            return defaultMap;
+        }
         // TODO: 2023/2/9 先预备获取列表, 以便后期拓展
         List<String > roles = permissionManager.permissionManager.getPermissionList(user.getPermissionToken());
         if (roles==null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);

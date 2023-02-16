@@ -39,10 +39,11 @@ public class ApplicationInfo extends DataEntity {
     private String description;
     @Column(columnDefinition = "int default 0")
     private Integer visit;
-    @CreationTimestamp
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private Date createTime;
 
     @TableField(exist = false)
+    @Transient
     private String clubName;
 
     public String getClubName() {

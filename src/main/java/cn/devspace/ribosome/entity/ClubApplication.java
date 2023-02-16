@@ -73,13 +73,13 @@ public class ClubApplication extends DataEntity {
         /**
          * 更新时间
          */
-        @UpdateTimestamp
+        @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
         private Date updateTime;
 
         /**
          * 创建时间
          */
-        @CreationTimestamp
+        @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
         private Date createTime;
 
         /**
@@ -89,6 +89,7 @@ public class ClubApplication extends DataEntity {
         private Integer isDeleted;
 
         @TableField(exist = false)
+        @Transient
         private String username;
 
         public String getUsername() {

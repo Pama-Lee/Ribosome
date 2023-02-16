@@ -38,7 +38,7 @@ public class ClassroomAvailable extends DataEntity {
     private String availableTime;
     private String unavailableDay;
     private boolean isAvailable;
-    @CreationTimestamp
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private Date createTime;
 
 

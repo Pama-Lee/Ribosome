@@ -155,7 +155,7 @@ public class club extends RouteManager {
         if (!ClubUnits.isPresident(String.valueOf(user.getUid()), args.get("cid"))) errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
 
         Map<String,Object> data = new HashMap<>();
-        List<ClubApplication> list = MapperManager.newInstance().clubApplicationBaseMapper.selectList(new QueryWrapper<ClubApplication>().eq("uid",user.getUid()));
+        List<ClubApplication> list = MapperManager.newInstance().clubApplicationBaseMapper.selectList(new QueryWrapper<ClubApplication>().eq("cid",args.get("cid")));
         data.put("data",list);
         data.put("code",200);
         data.put("msg","success");

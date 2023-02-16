@@ -51,13 +51,15 @@ public class Club extends DataEntity {
 
     @Column(columnDefinition = "int default 0")
     private Integer status;
-    @CreationTimestamp
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private Date time;
 
     @TableField(exist = false)
+    @Transient
     private Integer number;
 
     @TableField(exist = false)
+    @Transient
     private String presidentName;
 
     public int getNumber() {

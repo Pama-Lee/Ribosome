@@ -21,6 +21,7 @@ import lombok.Data;
 import org.hibernate.annotations.Generated;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Data
 @TableName("ribo_user")
@@ -38,4 +39,6 @@ public class User extends DataEntity {
     private String avatar;
     private String slogan;
     private String phone;
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
+    private Date createTime;
 }

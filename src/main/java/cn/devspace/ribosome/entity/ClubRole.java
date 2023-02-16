@@ -40,7 +40,7 @@ public class ClubRole extends DataEntity {
     private String cid;
     private String role;
     private String permissionToken;
-    @CreationTimestamp
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private Date createTime;
 
     /**

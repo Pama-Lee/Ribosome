@@ -39,7 +39,7 @@ public class ClubAnnouncement extends DataEntity {
     private String title;
     private String content;
     private String createUser;
-    @CreationTimestamp
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private Date createTime;
 
 }

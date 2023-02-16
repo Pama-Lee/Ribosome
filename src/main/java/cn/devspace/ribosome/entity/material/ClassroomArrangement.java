@@ -47,10 +47,11 @@ public class ClassroomArrangement extends DataEntity {
     private String uid;
     @Column(columnDefinition = "int default 0")
     private String status;
-    @CreationTimestamp
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private Date createTime;
 
     @TableField(exist = false)
+    @Transient
     private String cn;
 
     public String getCn() {

@@ -36,6 +36,7 @@ public class ClubUser extends DataEntity {
         private String cid;
         private String uid;
         @TableField(exist = false)
+        @Transient
         private String username;
         private String role;
         @Column(columnDefinition = "int default 0")
@@ -46,6 +47,7 @@ public class ClubUser extends DataEntity {
         private String quitReason;
 
         @TableField(exist = false)
+        @Transient
         private boolean isExist = true;
 
         @TableField(exist = false)

@@ -52,7 +52,11 @@ public class auth extends RouteManager{
             }
             User user = userUnit.getUserByopenID(String.valueOf(backMap.get("openid")));
             if (user == null) {
-                return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+                Map<String, Object> userInfo = userUnit.requestUserInfo(backMap.get("openid").toString());
+                if (userInfo == null || userInfo.get("email") == null) {
+                    return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+                }
+              userUnit.register(userInfo.get("email").toString(),backMap.get("openid").toString());
             }
             return ResponseString(200,1, languageManager.translateMessage("Auth.Login.Success"));
         } catch (Exception e) {
