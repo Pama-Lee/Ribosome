@@ -53,6 +53,7 @@ public class routes extends RouteManager {
 
         if (roles.contains("admin")) {
             data.add(admin());
+            data.add(home());
         }else {
             List<ClubUser> clubs = userUnit.getClubByUID(user.getUid());
             data.add(home());
@@ -65,6 +66,13 @@ public class routes extends RouteManager {
         return map;
     }
 
+    /**
+     * 社团路由
+     * Club's route
+     * @param clubs
+     * @param user
+     * @return
+     */
     public Route club(List<ClubUser> clubs, User user){
         // 定义社团路由
         // 社团主路由
@@ -108,31 +116,74 @@ public class routes extends RouteManager {
     }
 
 
+    /**
+     * 管理员路由
+     * @return
+     */
     public Route admin(){
         Route admin = new Route();
         admin.setName("Admin");
         admin.setIcon("admin");
         admin.setPath("/admin");
         List<Route> adminChildren = new ArrayList<>();
+        // ======================================
+        // 分析页
         Route dashboard = new Route();
         dashboard.setName("Dashboard");
         dashboard.setIcon("dashboard");
         dashboard.setPath("/admin/dashboard");
         dashboard.setComponent("./admin/DashboardAnalysis");
+
+        // ======================================
+        // 社团管理
         Route clubManager = new Route();
         clubManager.setName("Club Manager");
         clubManager.setIcon("club");
         clubManager.setPath("/admin/club-manager");
         clubManager.setComponent("./admin/ClubManager");
+
+        // ======================================
+        // 活动管理
         Route activityManager = new Route();
         activityManager.setName("Activity Manager");
         activityManager.setIcon("activity");
         activityManager.setPath("/admin/activity-manager");
         activityManager.setComponent("./admin/ActivityManager");
+
+        // ======================================
+        // 用户管理
+        Route userManager = new Route();
+        userManager.setName("User Manager");
+        userManager.setIcon("user");
+        userManager.setPath("/admin/user-manager");
+        userManager.setComponent("./admin/UserManager");
+
+        // ======================================
+        // 物料管理
+        Route materialManager = new Route();
+        materialManager.setName("Material Manager");
+        materialManager.setIcon("material");
+        materialManager.setPath("/admin/material-manager");
+        materialManager.setComponent("./admin/MaterialManager");
+
+        // ======================================
+        // 访问日志
+        Route accessLog = new Route();
+        accessLog.setName("Access Log");
+        accessLog.setIcon("log");
+        accessLog.setPath("/admin/access-log");
+        accessLog.setComponent("./admin/AccessLog");
+
+
         adminChildren.add(clubManager);
+        adminChildren.add(userManager);
         adminChildren.add(activityManager);
         adminChildren.add(dashboard);
+        adminChildren.add(materialManager);
+        adminChildren.add(accessLog);
+
         admin.setRoutes(adminChildren);
+
         return admin;
     }
 

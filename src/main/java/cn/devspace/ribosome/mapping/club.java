@@ -27,6 +27,7 @@ import cn.devspace.ribosome.manager.permission.permissionType;
 import cn.devspace.ribosome.manager.user.userUnit;
 import cn.devspace.ribosome.units.ClubUnits;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 
 import java.util.*;
@@ -60,7 +61,7 @@ public class club extends RouteManager {
      */
     @Router("getClubUser")
     public Object getClubUser(Map<String, String> args){
-        String[] params = {"cid", "token"};
+        String[] params = {"cid", "token", "current", "pageSize"};
         if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
 
         // 检查是否是本社团成员
@@ -68,7 +69,13 @@ public class club extends RouteManager {
         if (user == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
         if(!ClubUnits.isMember(args.get("cid"), String.valueOf(user.getUid()))) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
 
-        List<ClubUser> users = MapperManager.newInstance().clubUserBaseMapper.selectList(new QueryWrapper<ClubUser>().eq("cid", args.get("cid")));
+        // 分页
+        int current = Integer.parseInt(args.get("current"));
+        int pageSize = Integer.parseInt(args.get("pageSize"));
+        Page<ClubUser> page = new Page<>(current, pageSize);
+        QueryWrapper<ClubUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("cid", args.get("cid"));
+        Page<ClubUser> users = MapperManager.newInstance().clubUserBaseMapper.selectPage(page, queryWrapper);
         if (users == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
         return users;
     }
@@ -172,7 +179,7 @@ public class club extends RouteManager {
     public Object getClubAnnouncement(Map<String, String> args){
         String[] params = {"cid", "token"};
         if (!checkParams(args, params)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
-        ClubAnnouncement announcements = MapperManager.newInstance().clubAnnouncementBaseMapper.selectOne(new QueryWrapper<ClubAnnouncement>().eq("cid", args.get("cid")).orderByDesc("anid").last("limit 1"));
+        ClubAnnouncement announcements = MapperManager.newInstance().clubAnnouncementBaseMapper.selectOne(new QueryWrapper<ClubAnnouncement>().eq("cid", args.get("cid")).last("ORDER BY anid DESC LIMIT 1"));
         if (announcements == null) return ResponseString(200,0,"success");
         return ResponseObject(200,1,"success",announcements);
     }
@@ -190,9 +197,7 @@ public class club extends RouteManager {
         User user = userUnit.getUserByToken(args.get("token"));
         if (user == null) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
 
-        // TODO: 2023/2/11 后期需要匹配准确的权限, 目前先匹配社长
-        if (!ClubUnits.isPresident(String.valueOf(user.getUid()), args.get("cid"))) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
-
+        if(!ClubUnits.checkPermission(args.get("cid"), user.getUid().toString(), clubActionType.CREATE_ANNOUNCEMENT)&& !ClubUnits.isPresident(String.valueOf(user.getUid()), args.get("cid"))) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
         ClubAnnouncement announcement = new ClubAnnouncement();
         announcement.setCid(args.get("cid"));
         announcement.setTitle(args.get("title"));
@@ -245,6 +250,12 @@ public class club extends RouteManager {
         if (args.get("president") != null){
             if (!Objects.equals(role, permissionType.PERMISSION_PRESIDENT) && !Objects.equals(role, permissionType.PERMISSION_ADMIN)) return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
             club.setPresident(Integer.valueOf(args.get("president")));
+            String user = ClubUnits.checkClubMember(args.get("cid"), args.get("president"));
+            // 判断被设置的社长是否在社团中
+            if (Objects.equals(user, permissionType.NO_PERMISSION)){
+                // 如果不在社团中, 则添加社长
+               ClubUnits.addUser2Club(args.get("cid"), args.get("president"), "Set by admin", true);
+            }
         }
         // 只有管理员才有权限更改社团名称
         if (args.get("name") != null){
@@ -348,16 +359,7 @@ public class club extends RouteManager {
             MapperManager.newInstance().clubApplicationBaseMapper.updateById(clubApplication);
             // 添加用户到社团成员列表
             // Add user to club member list
-            ClubUser clubMember = new ClubUser();
-            clubMember.setCid(args.get("cid"));
-            clubMember.setUid(clubApplication.getUid());
-            clubMember.setJoinReason(clubApplication.getReason());
-            MapperManager.newInstance().clubUserBaseMapper.insert(clubMember);
-            // 发送通知
-            // Send notification
-            messageManager.applyClubResult(clubApplication.getUid(),args.get("cid"),true);
-
-
+            if (!ClubUnits.addUser2Club(args.get("cid"),clubApplication.getUid(),clubApplication.getReason(),false)) return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
             return ResponseString(200,1,"success");
         }else if (args.get("status").equals("2")){
             // 拒绝申请

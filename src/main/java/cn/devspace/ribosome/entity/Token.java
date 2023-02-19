@@ -13,6 +13,8 @@
 
 package cn.devspace.ribosome.entity;
 
+import cn.devspace.nucleus.Plugin.DataEntity;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -25,11 +27,11 @@ import java.util.Date;
 @TableName("ribo_token")
 @Entity
 @Table(name = "ribo_token")
-public class Token {
+public class Token extends DataEntity {
     /**
      * 主键
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tid;
@@ -47,7 +49,8 @@ public class Token {
     /**
      * 签名
      */
-    private String sign;
+    @Column(columnDefinition = "int default 1")
+    private int status;
 
     /**
      * 传入时间戳
@@ -57,16 +60,19 @@ public class Token {
     /**
      * 创建时间
      */
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private Date createTime;
 
     /**
      * 是否删除(0-未删, 1-已删)
      */
+    @Column(columnDefinition = "int default 0")
     private Integer isDeleted;
 
     /**
      * 更新时间
      */
+    @Column(columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     private Date updateTime;
 
 

@@ -56,6 +56,7 @@ public class Main extends PluginBase {
         initRoute(user.class);
         initRoute(adminBase.class);
         initRoute(material.class);
+        initRoute(activity.class);
     }
 
     public void initDatabase(){

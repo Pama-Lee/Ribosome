@@ -13,11 +13,11 @@
 
 package cn.devspace.ribosome.manager.database;
 
+import cn.devspace.nucleus.App.VisitLobby.Entity.Visit;
 import cn.devspace.nucleus.Manager.Annotation.DataMapper;
 import cn.devspace.ribosome.entity.*;
-import cn.devspace.ribosome.entity.material.Classroom;
-import cn.devspace.ribosome.entity.material.ClassroomArrangement;
-import cn.devspace.ribosome.entity.material.ClassroomAvailable;
+import cn.devspace.ribosome.entity.Error;
+import cn.devspace.ribosome.entity.material.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import javax.annotation.PostConstruct;
@@ -68,9 +68,17 @@ public class MapperManager {
     @Resource
     public BaseMapper<Classroom> classroomBaseMapper;
 
+    @Resource
+    public BaseMapper<Visitor> visitBaseMapper;
 
+    @Resource
+    public BaseMapper<Error> errorBaseMapper;
 
+    @Resource
+    public BaseMapper<MaterialArrangement> materialArrangementBaseMapper;
 
+    @Resource
+    public BaseMapper<Material> materialBaseMapper;
 
 
     public static MapperManager manager;

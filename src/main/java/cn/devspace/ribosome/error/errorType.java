@@ -33,4 +33,8 @@ public class errorType {
 
     public static final int ROLE_Not_Found = 3001;
     public static final int Unknown_Error = -1;
+
+
+
+
 }

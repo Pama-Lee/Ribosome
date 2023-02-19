@@ -24,6 +24,7 @@ import cn.devspace.ribosome.error.errorManager;
 import cn.devspace.ribosome.error.errorType;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.user.userUnit;
+import cn.devspace.ribosome.units.AdminUnits;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import java.util.*;
@@ -119,6 +120,9 @@ public class user extends RouteManager {
         if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
         List<String> permissions = permissionManager.permissionManager.getPermissionList(user.getPermissionToken());
 
+        // 设置用户头像前缀
+        user.setAvatar("https://api.pamalee.cn/" + user.getAvatar());
+
         // 获取用户消息数量
         Map<String,Object> messageCountMap = new HashMap<>();
         Integer messageCount = MapperManager.newInstance().userMessageBaseMapper.selectCount(new QueryWrapper<UserMessage>().eq("uid",user.getUid()).eq("status",0));
@@ -135,19 +139,39 @@ public class user extends RouteManager {
         return data;
     }
 
+    /**
+     * 更新用户信息
+     * Update user information
+     * @param args token,name,phone,email
+     * @return User
+     */
     @Router("updateUserInfo")
     public Object updateUserInfo(Map<String, String> args){
         String[] params = {"token","name","phone"};
         if (checkParams(args, params)) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
-        User user = userUnit.getUserByToken(args.get("token"));
-        if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
-        user.setName(args.get("name"));
-        user.setPhone(args.get("phone"));
-        User newUser = userUnit.updateUser(user);
-        return returnSuccess(newUser);
+
+        // 匹配管理员
+        if(AdminUnits.verifyAdmin(args.get("token"))){
+            if (args.get("uid") == null || args.get("uid").equals("") || args.get("name") == null || args.get("name").equals("") || args.get("phone") == null || args.get("phone").equals("") || args.get("email") == null || args.get("email").equals("")) errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+
+            User user = userUnit.getUserByUID(args.get("uid"));
+            if (user == null) errorManager.newInstance().catchErrors(errorType.USER_Not_Found);
+            user.setName(args.get("name"));
+            user.setEmail(args.get("email"));
+            user.setPhone(args.get("phone"));
+            User newUser = userUnit.updateUser(user);
+            return returnSuccess(newUser);
+        }else {
+            // 用户本人修改
+            User user = userUnit.getUserByToken(args.get("token"));
+            if (user == null) errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+            user.setName(args.get("name"));
+            user.setPhone(args.get("phone"));
+            User newUser = userUnit.updateUser(user);
+            return returnSuccess(newUser);
+        }
+
     }
-
-
 
     private Object returnSuccess(User newUser) {
         Map<String,Object> data = new HashMap<>();
@@ -157,7 +181,6 @@ public class user extends RouteManager {
         data.put("status","1");
         return data;
     }
-
 
     private Object testMessage(String uid) {
         List<UserMessage> list = new ArrayList<>();

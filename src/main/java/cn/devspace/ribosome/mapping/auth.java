@@ -58,10 +58,29 @@ public class auth extends RouteManager{
                 }
               userUnit.register(userInfo.get("email").toString(),backMap.get("openid").toString());
             }
-            return ResponseString(200,1, languageManager.translateMessage("Auth.Login.Success"));
+
+            // 下发本地Token
+            String token = userUnit.newLocalToken(user);
+            Map<String, Object> data = Map.of("token", token);
+            return ResponseObject(200, 1,"Login success", data);
+
         } catch (Exception e) {
             Log.sendWarn(e.getMessage());
             return errorManager.newInstance().catchErrors(errorType.Callback_Data_Error);
+        }
+    }
+
+    @Router("auth/login")
+    public Object login(Map<String ,String > args) {
+        String[] params = {"token"};
+        if(!checkParams(args, params)) {
+            return errorManager.newInstance().catchErrors(errorType.Illegal_Parameter);
+        }
+        User user = userUnit.getUserByToken(args.get("token"));
+        if(user == null) {
+            return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
+        }else {
+            return ResponseObject(200, 1, "Login success", Map.of("token", args.get("token")));
         }
     }
 

@@ -19,11 +19,13 @@ import cn.devspace.ribosome.entity.Club;
 import cn.devspace.ribosome.entity.ClubRole;
 import cn.devspace.ribosome.entity.ClubUser;
 import cn.devspace.ribosome.manager.database.MapperManager;
+import cn.devspace.ribosome.manager.message.messageManager;
 import cn.devspace.ribosome.manager.permission.action.clubActionType;
 import cn.devspace.ribosome.manager.permission.permissionType;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.Date;
 import java.util.List;
 
 public class ClubUnits {
@@ -193,6 +195,28 @@ public class ClubUnits {
             if(!hasPermission) return false;
         }
         return true;
+    }
+
+    /**
+     * 添加用户到社团
+     * Add user to club
+     * @param cid 社团ID | Club ID
+     * @param uid 用户ID | User ID
+     * @param joinReason 加入理由 | Join reason
+     * @return 是否成功 | Whether the operation is successful
+     */
+    public static boolean addUser2Club(String cid, String uid, String joinReason, boolean isAdministrator){
+        ClubUser clubMember = new ClubUser();
+        clubMember.setCid(cid);
+        clubMember.setUid(uid);
+        clubMember.setJoinTime(new Date().toString());
+        clubMember.setJoinReason(joinReason);
+        if (isAdministrator) {
+            messageManager.add2Club(uid,cid);
+        } else {
+            messageManager.applyClubResult(uid,cid,true);
+        }
+        return MapperManager.newInstance().clubUserBaseMapper.insert(clubMember) == 1;
     }
 
 }

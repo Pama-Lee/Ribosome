@@ -47,7 +47,7 @@ public class material extends RouteManager {
         if(user == null) return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
         if(!ClubUnits.checkPermission(args.get("cid"),String.valueOf(user.getUid()),clubActionType.CREATE_MATERIAL))
             return errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
-        List<ClassroomArrangement> list = MapperManager.newInstance().classroomArrangementBaseMapper.selectList(new QueryWrapper<ClassroomArrangement>().eq("club_id",args.get("cid")));
+        List<ClassroomArrangement> list = MapperManager.newInstance().classroomArrangementBaseMapper.selectList(new QueryWrapper<ClassroomArrangement>().eq("clubId",args.get("cid")));
         for (ClassroomArrangement classroomArrangement : list) {
             String[] time = classroomArrangement.getTime().split(",");
             StringBuilder builder = new StringBuilder();
@@ -194,8 +194,9 @@ public class material extends RouteManager {
         if (user == null) return errorManager.newInstance().catchErrors(errorType.Callback_Login_Token_Error);
         if (!ClubUnits.checkPermission(args.get("cid"), String.valueOf(user.getUid()), clubActionType.CREATE_MATERIAL)) return  errorManager.newInstance().catchErrors(errorType.Illegal_Permission);
 
-        List<ClassroomAvailable> list = MapperManager.newInstance().classroomAvailableBaseMapper.selectList(new QueryWrapper<ClassroomAvailable>().eq("is_available", 1));
-        List<ClassroomArrangement> list1 = MapperManager.newInstance().classroomArrangementBaseMapper.selectList(new QueryWrapper<ClassroomArrangement>().eq("status", 1));
+        List<ClassroomAvailable> list = MapperManager.newInstance().classroomAvailableBaseMapper.selectList(new QueryWrapper<ClassroomAvailable>().eq("isAvailable", 1));
+        // 只要是正在申请的, 都先锁定
+        List<ClassroomArrangement> list1 = MapperManager.newInstance().classroomArrangementBaseMapper.selectList(new QueryWrapper<ClassroomArrangement>().eq("status", 1).eq("status", 0));
 
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -237,7 +238,7 @@ public class material extends RouteManager {
             List<Object> availableRoom = new ArrayList<>();
             // 遍历今天可用的教室
             for (ClassroomAvailable classroomAvailable1 : classroomAvailable) {
-                if (classroomAvailable1.getUnavailableDay().contains(dateStr)) continue;
+                if (classroomAvailable1.getUnavailableDay() != null && classroomAvailable1.getUnavailableDay().contains(dateStr)) continue;
                 Map<String,Object> maps = new HashMap<>();
                 maps.put("label",classroomAvailable1.getClassroomName());
                 maps.put("value",classroomAvailable1.getCid());

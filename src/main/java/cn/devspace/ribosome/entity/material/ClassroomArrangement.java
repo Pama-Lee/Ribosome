@@ -30,7 +30,7 @@ import java.util.Date;
 @TableName("ribo_material_classroom_arrangement")
 @Entity
 @Table(name = "ribo_material_classroom_arrangement")
-public class ClassroomArrangement extends DataEntity {
+public class ClassroomArrangement extends DataEntity{
     @TableId(type = IdType.AUTO)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

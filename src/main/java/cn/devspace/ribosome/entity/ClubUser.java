@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -51,10 +52,17 @@ public class ClubUser extends DataEntity {
         private boolean isExist = true;
 
         @TableField(exist = false)
+        @Transient
         private String roleName;
 
         public String getRoleName() {
-            return MapperManager.manager.clubRoleBaseMapper.selectById(role).getRole();
+            if (role == null)
+                return "Member";
+            String roleName = MapperManager.manager.clubRoleBaseMapper.selectOne(new QueryWrapper<ClubRole>().eq("rid", role)).getRole();
+            if (roleName != null)
+                return roleName;
+            else
+                return "Member";
         }
 
         public String getUsername() {

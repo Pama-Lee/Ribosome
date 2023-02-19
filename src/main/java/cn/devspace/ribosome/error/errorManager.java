@@ -14,6 +14,8 @@
 package cn.devspace.ribosome.error;
 
 import cn.devspace.nucleus.Manager.ManagerBase;
+import cn.devspace.ribosome.entity.Error;
+import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.languageManager;
 
 /**
@@ -29,6 +31,12 @@ public class errorManager extends ManagerBase {
     }
 
     public Object catchErrors(int code){
+
+        // 写入错误日志数据库
+        // Write error log database
+        Error error = new Error();
+        error.setErrorCode(String.valueOf(code));
+        MapperManager.newInstance().errorBaseMapper.insert(error);
         return switch (code) {
             case errorType.Illegal_Parameter ->
                     ResponseString(code, -1, languageManager.translateMessage("Error.Illegal.parameter"));

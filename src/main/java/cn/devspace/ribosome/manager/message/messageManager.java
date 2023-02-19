@@ -68,6 +68,17 @@ public class messageManager {
         return createMessage(uid, title, content);
     }
 
+    public static UserMessage add2Club(String uid, String cid){
+        Club club = ClubUnits.getClubByCid(cid);
+        if (club == null)
+            return null;
+        String clubName = club.getName();
+
+        String title = "加入社团通知";
+        String content = "您已被管理员加入" + clubName + "，欢迎加入我们";
+        return createMessage(uid, title, content);
+    }
+
     /**
      * 欢迎新用户
      * @param uid 用户ID

@@ -14,10 +14,7 @@
 package cn.devspace.ribosome.manager.user;
 
 import cn.devspace.nucleus.Message.Log;
-import cn.devspace.ribosome.entity.Club;
-import cn.devspace.ribosome.entity.ClubUser;
-import cn.devspace.ribosome.entity.User;
-import cn.devspace.ribosome.entity.UserMessage;
+import cn.devspace.ribosome.entity.*;
 import cn.devspace.ribosome.manager.message.messageManager;
 import cn.devspace.ribosome.manager.database.MapperManager;
 import cn.devspace.ribosome.manager.permission.permissionType;
@@ -25,11 +22,9 @@ import cn.devspace.ribosome.units.jsonUnits;
 import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.gson.Gson;
+import org.springframework.util.DigestUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static cn.devspace.nucleus.App.Permission.unit.permissionManager.permissionManager;
 
@@ -106,20 +101,50 @@ public class userUnit {
 
 
     /**
+     * 生成新的Token
+     * @param user 用户信息｜User information
+     * @return
+     */
+    public static String newLocalToken(User user) {
+        String token = DigestUtils.md5DigestAsHex((new Date().getTime()+user.getOpenid()).getBytes());
+        Token token1 = new Token();
+        token1.setToken(token);
+        token1.setStatus(1);
+        token1.setUid(user.getUid());
+        // 设置过期时间为1天
+        token1.setTime(new Date().getTime()+86400000);
+        MapperManager.newInstance().tokenBaseMapper.insert(token1);
+        return token;
+    }
+
+    /**
+     * 检查Token是否有效
+     * Check if the Token is valid
+     * @param token
+     * @return
+     */
+    public static boolean verifyToken(String token) {
+        Token tokenData = MapperManager.newInstance().tokenBaseMapper.selectOne(new QueryWrapper<Token>().eq("token", token).eq("status","1").last("LIMIT 1"));
+        if (tokenData == null) {
+            return false;
+        }
+        return tokenData.getTime() >= new Date().getTime();
+    }
+
+
+    /**
      * 通过Token获取用户信息
      * get user information by Token
      * @param token 用户的Token｜User's Token
      * @return 返回用户信息｜Returns user information
      */
     public static User getUserByToken(String token) {
-        Map<String, Object> login = requestToken(token);
-        if (login == null || !Objects.equals(String.valueOf(login.get("msg")), "success")){
+        if (!verifyToken(token)) {
             return null;
         }
-        String openID = String.valueOf(login.get("openid"));
-        return getUserByopenID(openID);
+        Token tokenData = MapperManager.newInstance().tokenBaseMapper.selectOne(new QueryWrapper<Token>().eq("token", token).eq("status","1").last("LIMIT 1"));
+        return getUserByUID(String.valueOf(tokenData.getUid()));
     }
-
     /**
      * 更新用户信息
      * Update user information
